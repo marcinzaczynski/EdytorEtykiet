@@ -4,9 +4,206 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EdytorEtykiet"
+        xmlns:helpers="clr-namespace:EdytorEtykiet.Helpers"
+        xmlns:viewModel="clr-namespace:EdytorEtykiet.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="900" Width="1600"
+        WindowState="Maximized">
+
+    <Window.Resources>
+        <Style x:Key="WygladMarginesu" TargetType="Label">
+            <Setter Property="Visibility" Value="{Binding WidocznoscMarginesow}"/>
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="MouseLeftButtonDown"/>
+        </Style>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <viewModel:MainViewModel WysPx="400" SzerPx="400" x:Name="MainVM"/>
+    </Window.DataContext>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="helpers:CommandHandler.NowaEtykieta" 
+                        Executed="Command_NowaEtykieta"/>
+        <CommandBinding Command="helpers:CommandHandler.Zamknij" 
+                        Executed="Command_Zamknij"/>
+
+        <CommandBinding Command="helpers:CommandHandler.NowyTekst" 
+                        Executed="Command_NowyTekst"/>
+        <CommandBinding Command="helpers:CommandHandler.NowyKodKr" 
+                        Executed="Command_NowyKodKr"/>
+        <CommandBinding Command="helpers:CommandHandler.NowyObraz" 
+                        Executed="Command_NowyObraz"/>
+        <CommandBinding Command="helpers:CommandHandler.EdytujElement" 
+                        Executed="Command_EdytujElement"
+                        CanExecute="Command_CzyMoznaEdytowacElement"/>
+        <CommandBinding Command="helpers:CommandHandler.UsunElement" 
+                        Executed="Command_UsunElement"
+                        CanExecute="Command_CzyMoznaUsunacElement"/>
+        <CommandBinding Command="helpers:CommandHandler.OtworzPlik"
+                        Executed="Command_OtworzPlik"/>
+        <CommandBinding Command="helpers:CommandHandler.ZapiszPlik"
+                        Executed="Command_ZapiszPLik"/>
+        <CommandBinding Command="helpers:CommandHandler.Drukuj" 
+                        Executed="Command_Drukuj"
+                        CanExecute="Command_CzyMoznaDrukowac"/>
+    </Window.CommandBindings>
+
     <Grid>
+        <Grid.RowDefinitions>
+            <!--Menu Plik-->
+            <RowDefinition Height="auto"/>
+            <!--Pasek Toolbox-->
+            <RowDefinition Height="0"/>
+            <!--Kontent-->
+            <RowDefinition Height="*"/>
+            <!--Canvas zoom-->
+            <RowDefinition Height="48"/>
+            <!--Status bar-->
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <MenuItem Header="Plik">
+                <MenuItem Header="Nowa etykieta" Command="helpers:CommandHandler.NowaEtykieta"/>
+                <Separator/>
+                <MenuItem Header="Otwórz" Command="helpers:CommandHandler.OtworzPlik"/>
+                <MenuItem Header="Zapisz jako" Command="helpers:CommandHandler.ZapiszPlik"/>
+                <MenuItem Header="Drukuj" Command="helpers:CommandHandler.Drukuj"/>
+                <Separator/>
+                <MenuItem Header="Zamknij" Command="helpers:CommandHandler.Zamknij"/>
+            </MenuItem>
+            <MenuItem Header="Dodaj">
+                <MenuItem Header="Tekst" Command="helpers:CommandHandler.NowyTekst"/>
+                <Separator/>
+                <MenuItem Header="Obraz" Command="helpers:CommandHandler.NowyObraz"/>
+                <Separator/>
+                <MenuItem Header="Kod kreskowy" Command="helpers:CommandHandler.NowyKodKr"/>
+            </MenuItem>
+            
+        </Menu>
+
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
+            <GroupBox Header=" .: Elementy :. ">
+                <TreeView BorderBrush="{x:Null}" ItemsSource="{Binding ListaElementow}">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="True" />
+                            <Setter Property="IsSelected" Value="{Binding JestWybrany, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type viewModel:ElementEtykiety}" ItemsSource="{Binding Subelementy}">
+                            <TextBlock Text="{Binding Path=NazwaElementu}" HorizontalAlignment="Left"/>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </GroupBox>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="2" Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="#FFEAEAEA">
+            <helpers:EtykietaCanvas x:Name="EtykietaCanvas" Height="{Binding WysPx}" Width="{Binding SzerPx}" HorizontalAlignment="Left" VerticalAlignment="Top" MouseWheel="PowiekszKolkiem" Background="White" Margin="2" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor">
+                <Canvas.LayoutTransform>
+                    <ScaleTransform x:Name="EtykietaCanvasZmianaSkali"/>
+                </Canvas.LayoutTransform>
+                <Label Name="MarginesG" Style="{StaticResource WygladMarginesu}" Cursor="ScrollNS" Width="{Binding DlugoscMarginesuPoziomego}" Height="2" Canvas.Left="{Binding PoczatekMarginesu}" Canvas.Top="{Binding DomyslnaPozycjaMarginesuG, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Label Name="MarginesD" Style="{StaticResource WygladMarginesu}" Cursor="ScrollNS" Width="{Binding DlugoscMarginesuPoziomego}" Height="2" Canvas.Left="{Binding PoczatekMarginesu}" Canvas.Top="{Binding DomyslnaPozycjaMarginesuD, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Label Name="MarginesL" Style="{StaticResource WygladMarginesu}" Cursor="ScrollWE" Width="2" Height="{Binding DlugoscMarginesuPionowego}" Canvas.Top="{Binding PoczatekMarginesu}" Canvas.Left="{Binding DomyslnaPozycjaMarginesuL, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Label Name="MarginesP" Style="{StaticResource WygladMarginesu}" Cursor="ScrollWE" Width="2" Height="{Binding DlugoscMarginesuPionowego}" Canvas.Top="{Binding PoczatekMarginesu}" Canvas.Left="{Binding DomyslnaPozycjaMarginesuP, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            </helpers:EtykietaCanvas>
+        </ScrollViewer>
         
+        <GroupBox Grid.Row="3" Grid.Column="1" Header="Powiększenie">
+            <StackPanel Orientation="Horizontal">
+                <Slider x:Name="SliderPowiekszenie" Width="200" Value="1" Minimum="0.2" Maximum="3" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="SliderPowiekszenie_ValueChanged" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"/>
+                <Button Width="50" Margin="2,0,0,0" Content="1:1" Click="Button_UstawPowiekszenie" Tag="Default"/>
+                <Button Width="50" Margin="2,0,0,0" Content="+" Click="Button_UstawPowiekszenie" Tag="Plus"/>
+                <Button Width="50" Margin="2,0,0,0" Content="-" Click="Button_UstawPowiekszenie" Tag="Minus"/>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="2" Grid.Column="2">
+            <GroupBox Header="Info">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="Szerokość"/>
+                    <TextBox Width="50" Text="{Binding SzerPx}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="Wysokość"/>
+                    <TextBox Width="50" Text="{Binding WysPx}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="start X"/>
+                    <TextBox Width="50" Text="{Binding PozStartX}" IsReadOnly="True"/>
+                    <Label Width="90" Content="ruch X"/>
+                    <TextBox Width="50" Text="{Binding PozRuchX}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="start Y"/>
+                    <TextBox Width="50" Text="{Binding PozStartY}" IsReadOnly="True"/>
+                    <Label Width="90" Content="ruch Y"/>
+                    <TextBox Width="50" Text="{Binding PozRuchY}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="ograniczenie L"/>
+                    <TextBox Width="50" Text="{Binding OgraniczenieL}" IsReadOnly="True"/>
+                    <Label Width="90" Content="ograniczenie P"/>
+                    <TextBox Width="50" Text="{Binding OgraniczenieP}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="ograniczenie G"/>
+                    <TextBox Width="50" Text="{Binding OgraniczenieG}" IsReadOnly="True"/>
+                    <Label Width="90" Content="ograniczenie D"/>
+                    <TextBox Width="50" Text="{Binding OgraniczenieD}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="M L Left"/>
+                    <TextBox Width="50" Text="{Binding DomyslnaPozycjaMarginesuL}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="M P Left"/>
+                    <TextBox Width="50" Text="{Binding DomyslnaPozycjaMarginesuP}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="M G Top"/>
+                    <TextBox Width="50" Text="{Binding DomyslnaPozycjaMarginesuG}" IsReadOnly="True"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Label Width="90" Content="M D Top"/>
+                    <TextBox Width="50" Text="{Binding DomyslnaPozycjaMarginesuD}" IsReadOnly="True"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+            <GroupBox Header="Zaznaczony element">
+                <StackPanel Margin="5">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <Label Content="Nazwa elementu :"/>
+                        <TextBlock Text="{Binding NazwaZaznaczonegoElementu}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Height="30" Content="Edytuj (Ctrl + E)" Command="helpers:CommandHandler.EdytujElement"/>
+                    <Line Margin="3"/>
+                    <Button Height="30" Content="Usuń (Del)" Command="helpers:CommandHandler.UsunElement"/>
+                    
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+        <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
+            <!--<System:String>Status bar</System:String>-->
+            <Label Content="Status bar"/>
+        </StatusBar>
     </Grid>
 </Window>

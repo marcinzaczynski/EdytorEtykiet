@@ -1,0 +1,172 @@
+﻿<Window x:Class="EdytorEtykiet.WindowNowyTekst"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EdytorEtykiet"
+        xmlns:helpers="clr-namespace:EdytorEtykiet.Helpers"
+        xmlns:viewModel="clr-namespace:EdytorEtykiet.ViewModel"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Pole tekstowe" Height="450" Width="800">
+    
+    <Window.DataContext>
+        <viewModel:NowyTekstViewModel x:Name="NowyTekstVM"/>
+    </Window.DataContext>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="helpers:CommandHandler.Ok" 
+                        Executed="CommandOk_Executed" 
+                        CanExecute="CommandOk_CanExecute"/>
+        <CommandBinding Command="helpers:CommandHandler.Anuluj" 
+                        Executed="CommandAnuluj_Executed" 
+                        CanExecute="CommandAnuluj_CanExecute"/>
+    </Window.CommandBindings>
+
+    <Window.Resources>
+        <Style x:Key="DolnyPrzycisk" TargetType="Button">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <ImageBrush x:Key="WyrPozL" ImageSource="ikony\WyrPozL.png" />
+        <ImageBrush x:Key="WyrPozS" ImageSource="ikony\WyrPozS.png" />
+        <ImageBrush x:Key="WyrPozP" ImageSource="ikony\WyrPozP.png" />
+        <ImageBrush x:Key="WyrPionG" ImageSource="ikony\WyrPionG.png" />
+        <ImageBrush x:Key="WyrPionS" ImageSource="ikony\WyrPionS.png" />
+        <ImageBrush x:Key="WyrPionD" ImageSource="ikony\WyrPionD.png" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Właściwości">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Nazwa :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <TextBox Width="250" Text="{Binding TXTNazwa, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center" IsReadOnly="{Binding TXTCzyEdycja}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Wyświetlany tekst :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <TextBox Width="250" Text="{Binding TXTWidocznyTekst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Czcionka :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <Button Content="Zmień" Width="70" Click="ButtonZmienCzcionke"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Ramka :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding TXTCzyJestRamka, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Center"/>
+                    <Label Content="Grubość :"/>
+                    <TextBox Width="30" Text="{Binding TXTGruboscRamki, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TXTCzyJestRamka}" PreviewTextInput="TextBox_PreviewTextInput"  VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Dopasuj rozmiar :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding TXTAutoDopasowanie, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Wysokość :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <TextBox Width="70" Text="{Binding TXTWysokosc}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Szerokość :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <TextBox Width="70" Text="{Binding TXTSzerokosc}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Wyrównanie :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <Button Width="25" Margin="2" Click="WyrPozL_Button_Click">
+                        <Button.Content>
+                            <TextBlock Width="20" Height="16" Margin="0" Padding="0">
+                                <TextBlock.Background>
+                                    <StaticResource ResourceKey="WyrPozL"/>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                    <Button Width="25" Margin="2" Click="WyrPozS_Button_Click">
+                        <Button.Content>
+                            <TextBlock Width="20" Height="16" Margin="0" Padding="0">
+                                <TextBlock.Background>
+                                    <StaticResource ResourceKey="WyrPozS"/>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                    <Button Width="25" Margin="2" Click="WyrPozP_Button_Click">
+                        <Button.Content>
+                            <TextBlock Width="20" Height="16" Margin="0" Padding="0">
+                                <TextBlock.Background>
+                                    <StaticResource ResourceKey="WyrPozP"/>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                    <Label BorderBrush="DimGray" BorderThickness="1" Width="1" Margin="5"/>
+                    <Button Width="25" Margin="2" Click="WyrPionG_Button_Click">
+                        <Button.Content>
+                            <TextBlock Width="20" Height="16" Margin="0" Padding="0">
+                                <TextBlock.Background>
+                                    <StaticResource ResourceKey="WyrPionG"/>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                    <Button Width="25" Margin="2" Click="WyrPionS_Button_Click">
+                        <Button.Content>
+                            <TextBlock Width="20" Height="16" Margin="0" Padding="0">
+                                <TextBlock.Background>
+                                    <StaticResource ResourceKey="WyrPionS"/>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                    <Button Width="25" Margin="2" Click="WyrPionD_Button_Click">
+                        <Button.Content>
+                            <TextBlock Width="20" Height="16" Margin="0" Padding="0">
+                                <TextBlock.Background>
+                                    <StaticResource ResourceKey="WyrPionD"/>
+                                </TextBlock.Background>
+                            </TextBlock>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="26" Margin="2">
+                    <Label Content="Padding :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                    <TextBox Width="70" Text="0" IsReadOnly="True"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        
+        <GroupBox Grid.Row="0" Grid.Column="1" Header="Podgląd" >
+            <!--<Canvas Name="CanvasPreview" Width="auto" Height="auto">-->
+                <Label Content="{Binding TXTWidocznyTekst}" 
+                       Padding="0"
+                       BorderBrush="{Binding TXTKolorRamki}" BorderThickness="{Binding TXTGruboscRamki}" 
+                       Width="{Binding TXTSzerokosc}" Height="{Binding TXTWysokosc}"
+                       FontFamily="{Binding TXTFontFamily}" FontSize="{Binding TXTFontSize}" FontWeight="{Binding TXTFontWeight}" FontStyle="{Binding TXTFontStyle}"
+                       VerticalContentAlignment="{Binding TXTWyrownanieWPionie}" HorizontalContentAlignment="{Binding TXTWyrownanieWPoziomie}"/>
+            <!--</Canvas>-->
+        </GroupBox>
+        
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+            <StackPanel>
+                <Button Style="{StaticResource DolnyPrzycisk}" Command="helpers:CommandHandler.Ok" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsDefault="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(F1)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+            <StackPanel>
+                <Button Style="{StaticResource DolnyPrzycisk}" Command="helpers:CommandHandler.Anuluj" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" IsCancel="True"/>
+                <Label HorizontalContentAlignment="Center" Margin="0,-10,0,0" >
+                    <TextBlock FontSize="10"><Bold>(Esc)</Bold></TextBlock>
+                </Label>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

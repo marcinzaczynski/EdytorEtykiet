@@ -35,8 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BarcodeStandard">
+      <HintPath>..\BarcodeStandard.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +64,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\AppHandler.cs" />
+    <Compile Include="Helpers\BarcodeHandler.cs" />
+    <Compile Include="Helpers\Enums.cs" />
+    <Compile Include="Helpers\EtykietaCanvas.cs" />
+    <Compile Include="Helpers\Globals.cs" />
+    <Compile Include="Helpers\PrinterHandler.cs" />
+    <Compile Include="Model\NowaEtykietaModel.cs" />
+    <Compile Include="Model\NowyKodKrModel.cs" />
+    <Compile Include="Model\NowyObrazModel.cs" />
+    <Compile Include="Model\NowyTekstModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\NowaEtykietaViewModel.cs" />
+    <Compile Include="ViewModel\NowyKodKrViewModel.cs" />
+    <Compile Include="ViewModel\NowyObrazViewModel.cs" />
+    <Compile Include="ViewModel\NowyTekstViewModel.cs" />
+    <Compile Include="WindowNowaEtykieta.xaml.cs">
+      <DependentUpon>WindowNowaEtykieta.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowNowyKodKr.xaml.cs">
+      <DependentUpon>WindowNowyKodKr.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowNowyObraz.xaml.cs">
+      <DependentUpon>WindowNowyObraz.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowNowyTekst.xaml.cs">
+      <DependentUpon>WindowNowyTekst.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,10 +99,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\CommandHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WindowNowaEtykieta.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowNowyKodKr.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowNowyObraz.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowNowyTekst.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -86,6 +139,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -93,6 +147,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ikony\WyrPozL.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ikony\WyrPozP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ikony\WyrPozS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ikony\WyrPionD.png" />
+    <Resource Include="Ikony\WyrPionG.png" />
+    <Resource Include="Ikony\WyrPionS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
