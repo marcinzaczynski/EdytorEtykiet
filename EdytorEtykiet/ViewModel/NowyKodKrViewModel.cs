@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Windows.Media;
+﻿using BarcodeLib;
 using EdytorEtykiet.Helpers;
-using BarcodeStandard;
-using BarcodeLib;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
 
 
 namespace EdytorEtykiet.ViewModel
@@ -94,7 +90,7 @@ namespace EdytorEtykiet.ViewModel
                 Obraz = null;
                 Info = ex.Message;
             }
-            
+
         }
         #endregion
     }

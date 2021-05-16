@@ -1,11 +1,9 @@
-﻿using System;
+﻿using EdytorEtykiet.Helpers;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Drawing.Printing;
-using EdytorEtykiet.Helpers;
+using System.Linq;
 
 
 namespace EdytorEtykiet.ViewModel
@@ -45,7 +43,7 @@ namespace EdytorEtykiet.ViewModel
         private double szerMm;
         private double wysMm;
 
-        
+
 
         public string NazwaEtykiety
         {
@@ -150,7 +148,7 @@ namespace EdytorEtykiet.ViewModel
                 OnPropertyChanged("SzerIn");
                 SzerMm = inToMm(szerIn);
                 SzerPx = szerIn * XDPI;
-                
+
             }
         }
 

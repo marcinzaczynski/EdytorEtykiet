@@ -1,10 +1,5 @@
 ﻿using BarcodeLib;
 using EdytorEtykiet.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace EdytorEtykiet.Model
@@ -14,8 +9,8 @@ namespace EdytorEtykiet.Model
         private int id_pola;
         public int IdPola { get { return id_pola; } set { id_pola = value; } }
 
-        private TypPola typPola = TypPola.Barcode;
-        public TypPola TypPola { get { return typPola; } }
+        private TypyPol typPola = TypyPol.Barcode;
+        public TypyPol TypPola { get { return typPola; } }
 
         private string _Tekst;
         public string Tekst { get { return _Tekst; } set { _Tekst = value; } }

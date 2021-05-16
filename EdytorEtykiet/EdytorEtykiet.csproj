@@ -70,6 +70,9 @@
     <Compile Include="Helpers\EtykietaCanvas.cs" />
     <Compile Include="Helpers\Globals.cs" />
     <Compile Include="Helpers\PrinterHandler.cs" />
+    <Compile Include="Interfaces\INowyElement.cs" />
+    <Compile Include="Interfaces\INowyObraz.cs" />
+    <Compile Include="Interfaces\INowyTekst.cs" />
     <Compile Include="Model\NowaEtykietaModel.cs" />
     <Compile Include="Model\NowyKodKrModel.cs" />
     <Compile Include="Model\NowyObrazModel.cs" />

@@ -53,11 +53,11 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="2" >
                     <Label Content="Szerokość :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <TextBox Width="50" Text="{Binding Szerokosc, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                    <TextBox Width="50" Text="{Binding Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="2" >
                     <Label Content="Wysokość :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <TextBox Width="50" Text="{Binding Wysokosc, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center" IsReadOnly="True"/>
+                    <TextBox Width="50" Text="{Binding Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center" IsReadOnly="True"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="2" >
                     <Label Content="Obrót :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
@@ -72,7 +72,7 @@
                     <!--<Image Source="{Binding PelnaSciezka}" Width="{Binding Szerokosc}" Height="{Binding Wysokosc}" Margin="0" HorizontalAlignment="Left" Name="ImgPodglad" Stretch="Uniform" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" UseLayoutRounding="True"/>-->
                 <Canvas Width="auto" Height="auto">
                     <Border BorderThickness="1" BorderBrush="Red">
-                        <Image Source="{Binding Obraz}" Width="{Binding Szerokosc}" Height="{Binding Wysokosc}" Margin="0" Name="ImgPodglad" Stretch="Uniform" StretchDirection="Both"/>
+                        <Image Source="{Binding Source}" Width="{Binding Width}" Height="{Binding Height}" Margin="0" Name="ImgPodglad" Stretch="{Binding Stretch}" StretchDirection="Both"/>
                     </Border>
                 </Canvas>
                

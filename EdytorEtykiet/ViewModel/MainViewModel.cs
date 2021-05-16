@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using EdytorEtykiet.Helpers;
+using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
-using EdytorEtykiet.Helpers;
 
 namespace EdytorEtykiet.ViewModel
 {
@@ -25,7 +21,7 @@ namespace EdytorEtykiet.ViewModel
         // =====================================================================
         // ========================= PROPERTIES ================================
         #region region PROPERTIES
-        
+
         private const int DodatkowaDlugoscMarginesu = 10; // marginesy wychodzą poza Canvas na rogach
         private const int DlugoscWysunieciaMarginesu = 5;// długość wysunięcia marginesu po za canvas
         private double poczatekMarginesu = DlugoscWysunieciaMarginesu * -1;
@@ -57,28 +53,33 @@ namespace EdytorEtykiet.ViewModel
         public ObservableCollection<ElementEtykiety> ListaElementow { get { return listaElementow; } set { listaElementow = value; OnPropertyChanged("ListaElementow"); } }
         public string NazwaZaznaczonegoElementu { get { return nazwaZaznaczonegoElementu; } set { nazwaZaznaczonegoElementu = value; OnPropertyChanged("NazwaZaznaczonegoElementu"); } }
         public Visibility WidocznoscMarginesow { get { return widocznoscMarginesow; } set { widocznoscMarginesow = value; OnPropertyChanged("WidocznoscMarginesow"); } }
-        public double SzerPx { get { return szerPx; } 
-                               set {
-                                   szerPx = Math.Round(value);
-                                   OnPropertyChanged("SzerPx");
+        public double SzerPx
+        {
+            get { return szerPx; }
+            set
+            {
+                szerPx = Math.Round(value);
+                OnPropertyChanged("SzerPx");
 
-                                   // odświeżenie długości i pozycje marginesów
-                                   OnPropertyChanged("DlugoscMarginesuPoziomego");
-                                   DomyslnaPozycjaMarginesuL = 0;
-                                   DomyslnaPozycjaMarginesuP = szerPx;
-                               }
-                             }
-        public double WysPx { get { return wysPx; }
-                              set
-                              {
-                                  wysPx = Math.Round(value);
-                                  OnPropertyChanged("WysPx");
+                // odświeżenie długości i pozycje marginesów
+                OnPropertyChanged("DlugoscMarginesuPoziomego");
+                DomyslnaPozycjaMarginesuL = 0;
+                DomyslnaPozycjaMarginesuP = szerPx;
+            }
+        }
+        public double WysPx
+        {
+            get { return wysPx; }
+            set
+            {
+                wysPx = Math.Round(value);
+                OnPropertyChanged("WysPx");
 
-                                  // odświeżenie długości i pozycje marginesów
-                                  OnPropertyChanged("DlugoscMarginesuPionowego");
-                                  DomyslnaPozycjaMarginesuG = 0;
-                                  DomyslnaPozycjaMarginesuD = wysPx;
-                              }
+                // odświeżenie długości i pozycje marginesów
+                OnPropertyChanged("DlugoscMarginesuPionowego");
+                DomyslnaPozycjaMarginesuG = 0;
+                DomyslnaPozycjaMarginesuD = wysPx;
+            }
         }
         public double PozStartX { get { return pozStartX; } set { pozStartX = value; OnPropertyChanged("PozStartX"); } }
         public double PozStartY { get { return pozStartY; } set { pozStartY = value; OnPropertyChanged("PozStartY"); } }
@@ -102,13 +103,13 @@ namespace EdytorEtykiet.ViewModel
         private void UtworzDrzewoElementow()
         {
             ListaElementow = new ObservableCollection<ElementEtykiety>();
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Etykieta", TypPola = TypPola.Canvas });
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst", TypPola = TypPola.Txt });
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst z bazy danych", TypPola = TypPola.TxtDb });
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz", TypPola = TypPola.Pic });
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz z bazy danych", TypPola = TypPola.PicDb });
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy", TypPola = TypPola.Barcode });
-            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy z bazy danych", TypPola = TypPola.BarcodeDb });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Etykieta", TypPola = TypyPol.Canvas });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst", TypPola = TypyPol.Txt });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst z bazy danych", TypPola = TypyPol.TxtDb });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz", TypPola = TypyPol.Pic });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz z bazy danych", TypPola = TypyPol.PicDb });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy", TypPola = TypyPol.Barcode });
+            ListaElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy z bazy danych", TypPola = TypyPol.BarcodeDb });
 
 
             ListaElementow[0].Subelementy = new ObservableCollection<ElementEtykiety>();
@@ -138,7 +139,7 @@ namespace EdytorEtykiet.ViewModel
         #region region PROPERTIES
         public string NazwaElementu { get; set; }
         public ObservableCollection<ElementEtykiety> Subelementy { get; set; }
-        public TypPola TypPola { get; set; }
+        public TypyPol TypPola { get; set; }
         private bool jestWybrany;
 
         public bool JestWybrany { get { return jestWybrany; } set { jestWybrany = value; OnPropertyChanged("JestWybrany"); } }

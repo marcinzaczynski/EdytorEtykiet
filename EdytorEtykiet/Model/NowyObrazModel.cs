@@ -1,45 +1,67 @@
 ﻿using EdytorEtykiet.Helpers;
-using System;
-using System.Collections.Generic;
+using EdytorEtykiet.Interfaces;
 using System.Windows.Controls;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace EdytorEtykiet.Model
 {
-    public class NowyObrazModel : Image
+    public class NowyObrazModel : INowyElement, INowyObraz
     {
-        private int id_pola;
-        public int IdPola { get { return id_pola; } set { id_pola = value; } }
-        
-        private TypPola typPola = TypPola.Pic;
-        public TypPola TypPola { get { return typPola; } }
+        #region FIELDS & PROPERTIES
 
-        private string _PelnaSciezka;
-        public string PelnaSciezka { get { return _PelnaSciezka; } set { _PelnaSciezka = value; } }
+        #region INowyElement
 
-        private string _NazwaPliku;
-        public string NazwaPliku { get { return _NazwaPliku; } set { _NazwaPliku = value; } }
+        private int idPola;
+        public int IdPola { get { return idPola; } set { idPola = value; } }
 
-        private int _KatObrotu;
-        public int KatObrotu { get { return _KatObrotu; } set { _KatObrotu = value; Obroc(); } }
+        private TypyPol typPola = TypyPol.Pic;
+        public TypyPol TypPola { get { return typPola; } }
 
-        private double _Proporcja;
-        public double Proporcja { get { return _Proporcja; } set { _Proporcja = value; } }
+        private string nazwa;
+        public string Nazwa { get { return nazwa; } set { nazwa = value; } }
 
-        public NowyObrazModel() : base()
+        #endregion
+        #region INowyObraz
+
+        private string pelnaSciezka;
+        public string PelnaSciezka { get { return pelnaSciezka; } set { pelnaSciezka = value; } }
+
+        private int katObrotu;
+        public int KatObrotu { get { return katObrotu; } set { katObrotu = value; } }
+
+        private double proporcja;
+        public double Proporcja { get { return proporcja; } set { proporcja = value; } }
+
+        private ImageSource source;
+        public ImageSource Source { get { return source; } set { source = value; } }
+
+        private Image obraz;
+        public Image Obraz { get { return obraz; } set { obraz = value; } }
+
+        private double width;
+        public double Width { get { return width; } set { width = value; } }
+
+        private double height;
+        public double Height { get { return height; } set { height = value; } }
+
+        private Stretch stretch = Stretch.Uniform;
+        public Stretch Stretch { get { return stretch; } set { stretch = value; } }
+
+        #endregion
+
+        #endregion
+
+        public NowyObrazModel()
         {
 
         }
 
         private void Obroc()
         {
-            RotateTransform rotateTransform = new RotateTransform(_KatObrotu);
+            RotateTransform rotateTransform = new RotateTransform(KatObrotu);
 
             //ImgPodglad.RenderTransform = rotateTransform;
-            this.LayoutTransform = rotateTransform;
+            Obraz.LayoutTransform = rotateTransform;
         }
     }
 }

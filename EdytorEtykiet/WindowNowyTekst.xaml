@@ -50,11 +50,11 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Nazwa :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <TextBox Width="250" Text="{Binding TXTNazwa, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center" IsReadOnly="{Binding TXTCzyEdycja}"/>
+                    <TextBox Width="250" Text="{Binding Nazwa, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center" IsReadOnly="{Binding CzyEdycja}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Wyświetlany tekst :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <TextBox Width="250" Text="{Binding TXTWidocznyTekst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                    <TextBox Width="250" Text="{Binding Tekst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Czcionka :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
@@ -62,21 +62,21 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Ramka :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <CheckBox IsChecked="{Binding TXTCzyJestRamka, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding CzyJestRamka, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Center"/>
                     <Label Content="Grubość :"/>
-                    <TextBox Width="30" Text="{Binding TXTGruboscRamki, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TXTCzyJestRamka}" PreviewTextInput="TextBox_PreviewTextInput"  VerticalContentAlignment="Center"/>
+                    <TextBox Width="70" Text="{Binding GruboscRamki, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CzyJestRamka}" PreviewTextInput="TextBox_PreviewTextInput"  VerticalContentAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Dopasuj rozmiar :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <CheckBox IsChecked="{Binding TXTAutoDopasowanie, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding AutoDopasowanie, UpdateSourceTrigger=PropertyChanged}"  VerticalContentAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Wysokość :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <TextBox Width="70" Text="{Binding TXTWysokosc}"/>
+                    <TextBox Width="70" Text="{Binding Wysokosc}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Szerokość :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-                    <TextBox Width="70" Text="{Binding TXTSzerokosc}"/>
+                    <TextBox Width="70" Text="{Binding Szerokosc}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Height="26" Margin="2">
                     <Label Content="Wyrównanie :" Width="110" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
@@ -145,12 +145,18 @@
         
         <GroupBox Grid.Row="0" Grid.Column="1" Header="Podgląd" >
             <!--<Canvas Name="CanvasPreview" Width="auto" Height="auto">-->
-                <Label Content="{Binding TXTWidocznyTekst}" 
+                <Label Content="{Binding Tekst}" 
                        Padding="0"
-                       BorderBrush="{Binding TXTKolorRamki}" BorderThickness="{Binding TXTGruboscRamki}" 
-                       Width="{Binding TXTSzerokosc}" Height="{Binding TXTWysokosc}"
-                       FontFamily="{Binding TXTFontFamily}" FontSize="{Binding TXTFontSize}" FontWeight="{Binding TXTFontWeight}" FontStyle="{Binding TXTFontStyle}"
-                       VerticalContentAlignment="{Binding TXTWyrownanieWPionie}" HorizontalContentAlignment="{Binding TXTWyrownanieWPoziomie}"/>
+                       BorderBrush="{Binding KolorRamki}" 
+                       BorderThickness="{Binding GruboscRamki}" 
+                       Width="{Binding Szerokosc}" 
+                       Height="{Binding Wysokosc}"
+                       FontFamily="{Binding FontFamily}" 
+                       FontSize="{Binding FontSize}"
+                       FontWeight="{Binding FontWeight}" 
+                       FontStyle="{Binding FontStyle}"
+                       VerticalContentAlignment="{Binding WyrownanieWPionie}" 
+                       HorizontalContentAlignment="{Binding WyrownanieWPoziomie}"/>
             <!--</Canvas>-->
         </GroupBox>
         

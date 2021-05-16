@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EdytorEtykiet.Helpers
+﻿namespace EdytorEtykiet.Helpers
 {
-    public enum TypPola
+    public enum TypyPol
     {
         Canvas = 0,
         Txt = 1,

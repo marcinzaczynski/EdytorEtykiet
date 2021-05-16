@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EdytorEtykiet.Helpers;
+using EdytorEtykiet.Model;
+using EdytorEtykiet.ViewModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Forms;
-using EdytorEtykiet.ViewModel;
-using EdytorEtykiet.Helpers;
-using EdytorEtykiet.Model;
 
 namespace EdytorEtykiet
 {
@@ -23,47 +14,68 @@ namespace EdytorEtykiet
     /// </summary>
     public partial class WindowNowyTekst : Window
     {
-        public static event DodajNowyElementDelegat NowyTekstEvent;
-        public static event EdytujElementDelegat EdytujEvent;
+        public static event DodajNowyElementDelegat2 NowyTekstEvent;
+        public static event EdytujElementDelegat2 EdytujEvent;
 
-        public NowyTekstModel NowyTekst;
+        public NowyTekstModel NowyTekst = new NowyTekstModel();
 
         FontDialog fontDialog = new FontDialog();
 
-        //public WindowNowyTekst(System.Windows.Controls.Label nowy_tekst = null, int id_pola = 0)
         public WindowNowyTekst(NowyTekstModel nowy_tekst = null, int id_pola = 0)
         {
             InitializeComponent();
 
             if (nowy_tekst != null)
             {
-                
-                var dc = nowy_tekst.DataContext as NowyTekstViewModel;
-                NowyTekstVM.Odswiez(dc);
-                NowyTekstVM.TXTCzyEdycja = true;
-            } else
-            { 
-                NowyTekstVM.TXTIdPola = id_pola; 
+                NowyTekstVM.CzyEdycja = true;
+                NowyTekstVM.IdPola = nowy_tekst.IdPola;
+                NowyTekstVM.Nazwa = nowy_tekst.Nazwa;
+                NowyTekstVM.Tekst = nowy_tekst.Tekst;
+                NowyTekstVM.CzyJestRamka = nowy_tekst.CzyJestRamka;
+                NowyTekstVM.KolorRamki = nowy_tekst.KolorRamki;
+                NowyTekstVM.GruboscRamki = nowy_tekst.GruboscRamki;
+                NowyTekstVM.FontFamily = nowy_tekst.FontFamily;
+                NowyTekstVM.FontSize = nowy_tekst.FontSize;
+                NowyTekstVM.FontWeight = nowy_tekst.FontWeight;
+                NowyTekstVM.FontStyle = nowy_tekst.FontStyle;
+                NowyTekstVM.Wysokosc = nowy_tekst.Wysokosc;
+                NowyTekstVM.Szerokosc = nowy_tekst.Szerokosc;
+                NowyTekstVM.AutoDopasowanie = nowy_tekst.AutoDopasowanie;
+                NowyTekstVM.WyrownanieWPoziomie = nowy_tekst.WyrownanieWPoziomie;
+                NowyTekstVM.WyrownanieWPionie = nowy_tekst.WyrownanieWPionie;
+            }
+            else
+            {
+                NowyTekstVM.IdPola = id_pola;
             }
 
-            
-            NowyTekst = new NowyTekstModel();
-            NowyTekst.IdPola = NowyTekstVM.TXTIdPola;
-            NowyTekst.Padding = new Thickness(0,0,0,0);
-            NowyTekst.DataContext = NowyTekstVM;
         }
+
+        #region COMMANDS
 
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //NowyTekstVM.Czcionkas = fontDialog;
-            //NowyTekst.Name = NowyTekstVM.TXTNazwa;
-            AppHandler.BindData(NowyTekst);
+            NowyTekst.IdPola = NowyTekstVM.IdPola;
+            NowyTekst.Nazwa = NowyTekstVM.Nazwa;
+            NowyTekst.Tekst = NowyTekstVM.Tekst;
+            NowyTekst.CzyJestRamka = NowyTekstVM.CzyJestRamka;
+            NowyTekst.KolorRamki = NowyTekstVM.KolorRamki;
+            NowyTekst.GruboscRamki = NowyTekstVM.GruboscRamki;
+            NowyTekst.FontFamily = NowyTekstVM.FontFamily;
+            NowyTekst.FontSize = NowyTekstVM.FontSize;
+            NowyTekst.FontWeight = NowyTekstVM.FontWeight;
+            NowyTekst.FontStyle = NowyTekstVM.FontStyle;
+            NowyTekst.Wysokosc = NowyTekstVM.Wysokosc;
+            NowyTekst.Szerokosc = NowyTekstVM.Szerokosc;
+            NowyTekst.AutoDopasowanie = NowyTekstVM.AutoDopasowanie;
+            NowyTekst.WyrownanieWPoziomie = NowyTekstVM.WyrownanieWPoziomie;
+            NowyTekst.WyrownanieWPionie = NowyTekstVM.WyrownanieWPionie;  
 
-            var nameExist = MainWindow.ListaElementow.Where(c => c.Name == NowyTekstVM.TXTNazwa).FirstOrDefault();
+            var nameExist = MainWindow.ListaElementow.Where(c => c.Name == NowyTekstVM.Nazwa).FirstOrDefault();
 
-            
 
-            if (NowyTekstVM.TXTCzyEdycja)
+
+            if (NowyTekstVM.CzyEdycja)
             {
                 EdytujEvent?.Invoke(NowyTekst);
             }
@@ -75,7 +87,7 @@ namespace EdytorEtykiet
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show($"Element o nazwie {NowyTekstVM.TXTNazwa} jest już dodany. Zmień nazwę.", "Zatwierdzenie zmian.", MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Windows.MessageBox.Show($"Element o nazwie {NowyTekstVM.Nazwa} jest już dodany. Zmień nazwę.", "Zatwierdzenie zmian.", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
             }
@@ -85,7 +97,7 @@ namespace EdytorEtykiet
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(NowyTekstVM.TXTNazwa))
+            if (!string.IsNullOrEmpty(NowyTekstVM.Nazwa))
             {
                 e.CanExecute = true;
             }
@@ -102,6 +114,8 @@ namespace EdytorEtykiet
             e.CanExecute = true;
         }
 
+        #endregion
+
         private void ButtonZmienCzcionke(object sender, RoutedEventArgs e)
         {
             fontDialog.ShowColor = false;
@@ -111,10 +125,10 @@ namespace EdytorEtykiet
             fontDialog.AllowScriptChange = false;
             if (fontDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                NowyTekstVM.TXTFontFamily = new FontFamily(fontDialog.Font.Name);
-                NowyTekstVM.TXTFontSize = fontDialog.Font.Size;
-                NowyTekstVM.TXTFontWeight = fontDialog.Font.Bold ? FontWeights.Bold : FontWeights.Regular;
-                NowyTekstVM.TXTFontStyle = fontDialog.Font.Italic ? FontStyles.Italic : FontStyles.Normal;
+                NowyTekstVM.FontFamily = new FontFamily(fontDialog.Font.Name);
+                NowyTekstVM.FontSize = fontDialog.Font.Size;
+                NowyTekstVM.FontWeight = fontDialog.Font.Bold ? FontWeights.Bold : FontWeights.Regular;
+                NowyTekstVM.FontStyle = fontDialog.Font.Italic ? FontStyles.Italic : FontStyles.Normal;
             }
         }
 
@@ -125,32 +139,32 @@ namespace EdytorEtykiet
 
         private void WyrPozL_Button_Click(object sender, RoutedEventArgs e)
         {
-            NowyTekstVM.TXTWyrownanieWPoziomie = System.Windows.HorizontalAlignment.Left;
+            NowyTekstVM.WyrownanieWPoziomie = System.Windows.HorizontalAlignment.Left;
         }
 
         private void WyrPozS_Button_Click(object sender, RoutedEventArgs e)
         {
-            NowyTekstVM.TXTWyrownanieWPoziomie = System.Windows.HorizontalAlignment.Center;
+            NowyTekstVM.WyrownanieWPoziomie = System.Windows.HorizontalAlignment.Center;
         }
 
         private void WyrPozP_Button_Click(object sender, RoutedEventArgs e)
         {
-            NowyTekstVM.TXTWyrownanieWPoziomie = System.Windows.HorizontalAlignment.Right;
+            NowyTekstVM.WyrownanieWPoziomie = System.Windows.HorizontalAlignment.Right;
         }
 
         private void WyrPionG_Button_Click(object sender, RoutedEventArgs e)
         {
-            NowyTekstVM.TXTWyrownanieWPionie = System.Windows.VerticalAlignment.Top;
+            NowyTekstVM.WyrownanieWPionie = System.Windows.VerticalAlignment.Top;
         }
 
         private void WyrPionS_Button_Click(object sender, RoutedEventArgs e)
         {
-            NowyTekstVM.TXTWyrownanieWPionie = System.Windows.VerticalAlignment.Center;
+            NowyTekstVM.WyrownanieWPionie = System.Windows.VerticalAlignment.Center;
         }
 
         private void WyrPionD_Button_Click(object sender, RoutedEventArgs e)
         {
-            NowyTekstVM.TXTWyrownanieWPionie = System.Windows.VerticalAlignment.Bottom;
+            NowyTekstVM.WyrownanieWPionie = System.Windows.VerticalAlignment.Bottom;
         }
     }
 }

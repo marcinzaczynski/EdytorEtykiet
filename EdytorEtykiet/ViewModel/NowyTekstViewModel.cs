@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
-using System.Globalization;
 
 namespace EdytorEtykiet.ViewModel
 {
     public class NowyTekstViewModel : INotifyPropertyChanged
     {
         #region region PROPERTY CHANGE
-      
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -25,53 +21,53 @@ namespace EdytorEtykiet.ViewModel
         #endregion
         #region region PROPERTIES
 
-        private bool txtCzyEdycja = false;
-        public bool TXTCzyEdycja { get { return txtCzyEdycja; } set { txtCzyEdycja = value; } }
+        private bool czyEdycja = false;
+        public bool CzyEdycja { get { return czyEdycja; } set { czyEdycja = value; } }
 
-        private int txtIdPola;
-        public int TXTIdPola { get { return txtIdPola; } set { txtIdPola = value; UstawNazwe(txtIdPola); } }
+        private int idPola;
+        public int IdPola { get { return idPola; } set { idPola = value; UstawNazwe(idPola); } }
 
-        private string txtNazwa;
-        public string TXTNazwa { get { return txtNazwa; } set { txtNazwa = value; OnPropertyChanged("TXTNazwa"); } }
+        private string nazwa;
+        public string Nazwa { get { return nazwa; } set { nazwa = value; OnPropertyChanged("Nazwa"); } }
 
-        private string txtWidocznyTekst = "pole tekstowe";
-        public string TXTWidocznyTekst { get { return txtWidocznyTekst; } set { txtWidocznyTekst = value; OnPropertyChanged("TXTWidocznyTekst"); } }
+        private string tekst = "pole tekstowe";
+        public string Tekst { get { return tekst; } set { tekst = value; OnPropertyChanged("Tekst"); } }
 
-        private bool txtCzyJestRamka;
-        public bool TXTCzyJestRamka { get { return txtCzyJestRamka; } set { txtCzyJestRamka = value; OnPropertyChanged("TXTCzyJestRamka");  if (value) { TXTKolorRamki = new SolidColorBrush(Colors.Black); TXTGruboscRamki = 1; } else { TXTKolorRamki = new SolidColorBrush(Colors.White); TXTGruboscRamki = 1; } } }
+        private bool czyJestRamka;
+        public bool CzyJestRamka { get { return czyJestRamka; } set { czyJestRamka = value; OnPropertyChanged("CzyJestRamka"); if (value) { KolorRamki = new SolidColorBrush(Colors.Black); GruboscRamki = new Thickness(1); } else { KolorRamki = new SolidColorBrush(Colors.White); GruboscRamki = new Thickness(1); } } }
 
-        private SolidColorBrush txtKolorRamki = new SolidColorBrush(Colors.White);
-        public SolidColorBrush TXTKolorRamki { get { return txtKolorRamki; } set { txtKolorRamki = value; OnPropertyChanged("TXTKolorRamki"); } }
+        private SolidColorBrush kolorRamki = new SolidColorBrush(Colors.White);
+        public SolidColorBrush KolorRamki { get { return kolorRamki; } set { kolorRamki = value; OnPropertyChanged("KolorRamki"); } }
 
-        private int txtGruboscRamki;
-        public int TXTGruboscRamki { get { return txtGruboscRamki; } set { txtGruboscRamki = value; OnPropertyChanged("TXTGruboscRamki"); } }
+        private Thickness gruboscRamki;
+        public Thickness GruboscRamki { get { return gruboscRamki; } set { gruboscRamki = value; OnPropertyChanged("GruboscRamki"); } }
 
-        private FontFamily txtFontFamily = new FontFamily("MS Sans Serif");
-        public FontFamily TXTFontFamily { get { return txtFontFamily; } set { txtFontFamily = value; OnPropertyChanged("TXTFontFamily"); } }
+        private FontFamily fontFamily = new FontFamily("MS Sans Serif");
+        public FontFamily FontFamily { get { return fontFamily; } set { fontFamily = value; OnPropertyChanged("FontFamily"); } }
 
-        private float txtFontSize = 10;
-        public float TXTFontSize { get { return txtFontSize; } set { txtFontSize = value; OnPropertyChanged("TXTFontSize"); } }
+        private float fontSize = 10;
+        public float FontSize { get { return fontSize; } set { fontSize = value; OnPropertyChanged("FontSize"); } }
 
-        private FontWeight txtFontWeight = FontWeights.Normal;
-        public FontWeight TXTFontWeight { get { return txtFontWeight; } set { txtFontWeight = value; OnPropertyChanged("TXTFontWeight"); } }
+        private FontWeight fontWeight = FontWeights.Normal;
+        public FontWeight FontWeight { get { return fontWeight; } set { fontWeight = value; OnPropertyChanged("FontWeight"); } }
 
-        private FontStyle txtFontStyle = FontStyles.Normal;
-        public FontStyle TXTFontStyle { get { return txtFontStyle; } set { txtFontStyle = value; OnPropertyChanged("TXTFontStyle"); } }
+        private FontStyle fontStyle = FontStyles.Normal;
+        public FontStyle FontStyle { get { return fontStyle; } set { fontStyle = value; OnPropertyChanged("FontStyle"); } }
 
-        private double txtWysokosc;
-        public double TXTWysokosc { get { return txtWysokosc; }  set { txtWysokosc = value; OnPropertyChanged("TXTWysokosc"); } }
+        private double wysokosc;
+        public double Wysokosc { get { return wysokosc; } set { wysokosc = value; OnPropertyChanged("Wysokosc"); } }
 
-        private double txtSzerokosc;
-        public double TXTSzerokosc { get { return txtSzerokosc; } set { txtSzerokosc = value; OnPropertyChanged("TXTSzerokosc"); } }
+        private double szerokosc;
+        public double Szerokosc { get { return szerokosc; } set { szerokosc = value; OnPropertyChanged("Szerokosc"); } }
 
-        private bool txtAutoDopasowanie = false;
-        public bool TXTAutoDopasowanie { get { return txtAutoDopasowanie; } set { txtAutoDopasowanie = value; OnPropertyChanged("TXTAutoDopasowanie"); DopasujRozmiar(); } }
+        private bool autoDopasowanie = false;
+        public bool AutoDopasowanie { get { return autoDopasowanie; } set { autoDopasowanie = value; OnPropertyChanged("AutoDopasowanie"); DopasujRozmiar(); } }
 
-        private System.Windows.HorizontalAlignment txtWyrownanieWPoziomie;
-        public System.Windows.HorizontalAlignment TXTWyrownanieWPoziomie { get { return txtWyrownanieWPoziomie; } set { txtWyrownanieWPoziomie = value; OnPropertyChanged("TXTWyrownanieWPoziomie"); } }
+        private System.Windows.HorizontalAlignment wyrownanieWPoziomie;
+        public System.Windows.HorizontalAlignment WyrownanieWPoziomie { get { return wyrownanieWPoziomie; } set { wyrownanieWPoziomie = value; OnPropertyChanged("WyrownanieWPoziomie"); } }
 
-        private System.Windows.VerticalAlignment txtWyrownanieWPionie;
-        public System.Windows.VerticalAlignment TXTWyrownanieWPionie { get { return txtWyrownanieWPionie; } set { txtWyrownanieWPionie = value; OnPropertyChanged("TXTWyrownanieWPionie"); } }
+        private System.Windows.VerticalAlignment wyrownanieWPionie;
+        public System.Windows.VerticalAlignment WyrownanieWPionie { get { return wyrownanieWPionie; } set { wyrownanieWPionie = value; OnPropertyChanged("WyrownanieWPionie"); } }
 
         private FontDialog czcionka;
         public FontDialog Czcionkas { get { return czcionka; } set { czcionka = value; OnPropertyChanged("Czcionka"); } }
@@ -83,26 +79,26 @@ namespace EdytorEtykiet.ViewModel
 
         private void UstawNazwe(int _id)
         {
-            TXTNazwa = "TXT_" + _id.ToString().PadLeft(3, '0');
+            Nazwa = "TXT_" + _id.ToString().PadLeft(3, '0');
         }
 
         private void DopasujRozmiar()
         {
-            if (TXTAutoDopasowanie)
+            if (AutoDopasowanie)
             {
                 var formattedText = new FormattedText(
-                    TXTWidocznyTekst,
+                    Tekst,
                     CultureInfo.CurrentCulture,
                     System.Windows.FlowDirection.LeftToRight,
-                    new Typeface(TXTFontFamily, TXTFontStyle, TXTFontWeight, FontStretches.Medium),
-                    TXTFontSize,
+                    new Typeface(FontFamily, FontStyle, FontWeight, FontStretches.Medium),
+                    FontSize,
                     Brushes.Black,
                     new NumberSubstitution(),
                     1
                     );
 
-                TXTSzerokosc = Math.Round(formattedText.Width, 0);
-                TXTWysokosc = Math.Round(formattedText.Height, 0);
+                Szerokosc = Math.Round(formattedText.Width, 0);
+                Wysokosc = Math.Round(formattedText.Height, 0);
 
             }
         }
@@ -110,21 +106,21 @@ namespace EdytorEtykiet.ViewModel
         public void Odswiez(NowyTekstViewModel dc)
         {
             //TXTCzyEdycja 
-            TXTIdPola = dc.TXTIdPola;
-            TXTNazwa = dc.TXTNazwa;
-            TXTWidocznyTekst = dc.TXTWidocznyTekst;
-            TXTCzyJestRamka = dc.TXTCzyJestRamka;
-            TXTKolorRamki = dc.TXTKolorRamki;
-            TXTGruboscRamki = dc.TXTGruboscRamki;
-            TXTFontFamily = dc.TXTFontFamily;
-            TXTFontSize = dc.TXTFontSize;
-            TXTFontWeight = dc.TXTFontWeight;
-            TXTFontStyle = dc.TXTFontStyle;
-            TXTWysokosc = dc.TXTWysokosc;
-            TXTSzerokosc = dc.TXTSzerokosc;
-            TXTAutoDopasowanie = dc.TXTAutoDopasowanie;
-            TXTWyrownanieWPoziomie = dc.TXTWyrownanieWPoziomie;
-            TXTWyrownanieWPionie = dc.TXTWyrownanieWPionie;
+            IdPola = dc.IdPola;
+            Nazwa = dc.Nazwa;
+            Tekst = dc.Tekst;
+            CzyJestRamka = dc.CzyJestRamka;
+            KolorRamki = dc.KolorRamki;
+            GruboscRamki = dc.GruboscRamki;
+            FontFamily = dc.FontFamily;
+            FontSize = dc.FontSize;
+            FontWeight = dc.FontWeight;
+            FontStyle = dc.FontStyle;
+            Wysokosc = dc.Wysokosc;
+            Szerokosc = dc.Szerokosc;
+            AutoDopasowanie = dc.AutoDopasowanie;
+            WyrownanieWPoziomie = dc.WyrownanieWPoziomie;
+            WyrownanieWPionie = dc.WyrownanieWPionie;
         }
     }
 }
