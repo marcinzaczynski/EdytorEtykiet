@@ -14,6 +14,5 @@ namespace EdytorEtykiet.Interfaces
         Image Obraz { get; set; }
         double Width { get; set; }
         double Height { get; set; }
-        Stretch Stretch { get; set; }
     }
 }

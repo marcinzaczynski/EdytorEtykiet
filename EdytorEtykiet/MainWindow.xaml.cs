@@ -159,11 +159,12 @@ namespace EdytorEtykiet
                     new WindowNowyKodKr().ShowDialog();
                     break;
                 case TypyPol.Txt:
-                    var el = (elementDoEdycji as NowyTekstModel);
-                    new WindowNowyTekst(el).ShowDialog();
+                    var elTxt = (elementDoEdycji as NowyTekstModel);
+                    new WindowNowyTekst(elTxt).ShowDialog();
                     break;
                 case TypyPol.Pic:
-                    new WindowNowyObraz().ShowDialog();
+                    var elPic = (elementDoEdycji as NowyObrazModel);
+                    new WindowNowyObraz(elPic).ShowDialog();
                     break;
                 default:
                     break;

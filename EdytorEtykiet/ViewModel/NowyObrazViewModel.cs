@@ -50,9 +50,6 @@ namespace EdytorEtykiet.ViewModel
         private int katObrotu = 0;
         public int KatObrotu { get { return katObrotu; } set { katObrotu = value; OnPropertyChanged("KatObrot"); } }
 
-        private Stretch stretch = Stretch.Uniform;
-        public Stretch Stretch { get { return stretch; } set { stretch = value; } }
-
         #endregion
         #region MAIN
 
@@ -79,25 +76,6 @@ namespace EdytorEtykiet.ViewModel
         private void WyodrebnijNazwePliku()
         {
             NazwaPliku = Path.GetFileName(PelnaSciezka);
-        }
-
-        public void DostosujWysokosc()
-        {
-            Height = Math.Round((Width / Proporcja), 0);
-        }
-
-        public void DostosujSzerokosc()
-        {
-            Width = Math.Round((Height * Proporcja), 0);
-        }
-
-        private void Obroc()
-        {
-            RotateTransform rotateTransform = new RotateTransform(KatObrotu);
-
-            //Obraz2.LayoutTransform = rotateTransform;
-            //Wysokosc = Obraz.Width;
-            //Szerokosc = Obraz.Height;
         }
 
         #endregion

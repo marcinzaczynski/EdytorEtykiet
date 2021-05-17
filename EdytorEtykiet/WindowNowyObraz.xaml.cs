@@ -28,8 +28,9 @@ namespace EdytorEtykiet
                 NowyObrazVM.PelnaSciezka = nowy_obraz.PelnaSciezka;
                 NowyObrazVM.KatObrotu = nowy_obraz.KatObrotu;
                 NowyObrazVM.Proporcja = nowy_obraz.Proporcja;
-                NowyObrazVM.Source = nowy_obraz.Source;
-
+                NowyObrazVM.Source = new ImageSourceConverter().ConvertFromString(nowy_obraz.PelnaSciezka) as ImageSource;
+                NowyObrazVM.Width = nowy_obraz.Width;
+                NowyObrazVM.Height = nowy_obraz.Height;
                 Obroc(NowyObrazVM.KatObrotu);
             }
             else
@@ -48,7 +49,7 @@ namespace EdytorEtykiet
 
             NowyObraz.PelnaSciezka = NowyObrazVM.PelnaSciezka;
             NowyObraz.KatObrotu = NowyObrazVM.KatObrotu;
-            NowyObraz.Stretch = Stretch.Uniform;
+            
 
             var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyObrazVM.Nazwa).FirstOrDefault();
 

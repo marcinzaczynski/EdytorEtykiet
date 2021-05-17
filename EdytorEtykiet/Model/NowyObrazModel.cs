@@ -44,8 +44,6 @@ namespace EdytorEtykiet.Model
         private double height;
         public double Height { get { return height; } set { height = value; } }
 
-        private Stretch stretch = Stretch.Uniform;
-        public Stretch Stretch { get { return stretch; } set { stretch = value; } }
 
         #endregion
 
