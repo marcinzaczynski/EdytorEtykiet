@@ -27,10 +27,7 @@ namespace EdytorEtykiet
                 NowyObrazVM.Nazwa = nowy_obraz.Nazwa;
                 NowyObrazVM.PelnaSciezka = nowy_obraz.PelnaSciezka;
                 NowyObrazVM.KatObrotu = nowy_obraz.KatObrotu;
-                NowyObrazVM.Proporcja = nowy_obraz.Proporcja;
                 NowyObrazVM.Source = new ImageSourceConverter().ConvertFromString(nowy_obraz.PelnaSciezka) as ImageSource;
-                NowyObrazVM.Width = nowy_obraz.Width;
-                NowyObrazVM.Height = nowy_obraz.Height;
                 Obroc(NowyObrazVM.KatObrotu);
             }
             else
@@ -41,12 +38,10 @@ namespace EdytorEtykiet
 
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //AppHandler.BindData(NowyObraz); // tylko pola z klasy Image
-            NowyObraz.Width = NowyObrazVM.Width;
-            NowyObraz.Height = NowyObrazVM.Height;
-            NowyObraz.Source = NowyObrazVM.Source;
-            NowyObraz.Nazwa = NowyObrazVM.Nazwa;
 
+            //NowyObraz.Source = NowyObrazVM.Source;
+            NowyObraz.IdPola = NowyObrazVM.IdPola;
+            NowyObraz.Nazwa = NowyObrazVM.Nazwa;
             NowyObraz.PelnaSciezka = NowyObrazVM.PelnaSciezka;
             NowyObraz.KatObrotu = NowyObrazVM.KatObrotu;
             
@@ -109,12 +104,7 @@ namespace EdytorEtykiet
 
             RotateTransform rotateTransform = new RotateTransform(_kat);
 
-            //ImgPodglad.RenderTransform = rotateTransform;
             ImgPodglad.LayoutTransform = rotateTransform;
-            //NowyObrazVM.Szerokosc = ImgPodglad.ActualHeight;
-            //NowyObrazVM.Wysokosc = ImgPodglad.ActualWidth;
-            //Canvas.SetLeft(ImgPodglad, 0);
-            //Canvas.SetTop(ImgPodglad, 0);
         }
     }
 }

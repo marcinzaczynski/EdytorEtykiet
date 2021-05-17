@@ -29,37 +29,8 @@ namespace EdytorEtykiet.Model
         private int katObrotu;
         public int KatObrotu { get { return katObrotu; } set { katObrotu = value; } }
 
-        private double proporcja;
-        public double Proporcja { get { return proporcja; } set { proporcja = value; } }
-
-        private ImageSource source;
-        public ImageSource Source { get { return source; } set { source = value; } }
-
-        private Image obraz;
-        public Image Obraz { get { return obraz; } set { obraz = value; } }
-
-        private double width;
-        public double Width { get { return width; } set { width = value; } }
-
-        private double height;
-        public double Height { get { return height; } set { height = value; } }
-
-
         #endregion
 
         #endregion
-
-        public NowyObrazModel()
-        {
-
-        }
-
-        private void Obroc()
-        {
-            RotateTransform rotateTransform = new RotateTransform(KatObrotu);
-
-            //ImgPodglad.RenderTransform = rotateTransform;
-            Obraz.LayoutTransform = rotateTransform;
-        }
     }
 }

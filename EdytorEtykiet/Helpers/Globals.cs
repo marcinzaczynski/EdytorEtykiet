@@ -92,7 +92,7 @@ namespace EdytorEtykiet.Helpers
 
 
             XElement element =
-            new XElement("PublishedPages",
+            new XElement("WzorEtykiety",
                 (from item in _etykieta
                  where item.TypPola == TypyPol.Txt
                  select new XElement("TXT",
@@ -111,6 +111,15 @@ namespace EdytorEtykiet.Helpers
                      new XElement("AutoDopasowanie", (item as NowyTekstModel).AutoDopasowanie),
                      new XElement("WyrownanieWPoziomie", (item as NowyTekstModel).WyrownanieWPoziomie),
                      new XElement("WyrownanieWPionie", (item as NowyTekstModel).WyrownanieWPionie)
+                     )
+                ),
+                (from item in _etykieta
+                 where item.TypPola == TypyPol.Pic
+                 select new XElement("PIC",
+                     new XElement("IdPola", (item as NowyObrazModel).IdPola),
+                     new XElement("Nazwa", (item as NowyObrazModel).Nazwa),
+                     new XElement("PelnaSciezka", (item as NowyObrazModel).PelnaSciezka),
+                     new XElement("KatObrotu", (item as NowyObrazModel).KatObrotu)
                      )
                 )
             );

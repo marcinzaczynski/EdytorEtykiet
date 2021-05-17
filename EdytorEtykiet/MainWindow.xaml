@@ -29,7 +29,6 @@
                         Executed="Command_NowaEtykieta"/>
         <CommandBinding Command="helpers:CommandHandler.Zamknij" 
                         Executed="Command_Zamknij"/>
-
         <CommandBinding Command="helpers:CommandHandler.NowyTekst" 
                         Executed="Command_NowyTekst"/>
         <CommandBinding Command="helpers:CommandHandler.NowyKodKr" 

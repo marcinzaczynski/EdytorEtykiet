@@ -11,8 +11,8 @@ namespace EdytorEtykiet.ViewModel
 {
     public class NowyKodKrViewModel : INotifyPropertyChanged
     {
-        // ========================= PROPERTY CHANGE ===========================
-        #region region PROPERTY CHANGE
+        #region PROPERTY CHANGE
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -21,39 +21,53 @@ namespace EdytorEtykiet.ViewModel
         }
 
         #endregion
-        // ========================= PROPERTIES ================================
-        #region region PROPERTIES
-        private bool _CzyEdycja = false;
-        private int _IdPola;
-        private string _Nazwa;
-        private string _Tekst = "0123456789123";
-        private List<TYPE> _ListaTypow;
-        private TYPE _Typ = TYPE.EAN13;
-        private int _Szerokosc = 100;
-        private int _Wysokosc = 100;
-        private ImageSource _Obraz;
-        private bool _CzyPokazacTekst = true;
-        private FontFamily _FontFamily = new FontFamily("Microsoft Sans Serif");
-        private float _FontSize = 10;
-        private FontWeight _FontWeight = FontWeights.Normal;
-        private string _Info;
-        public bool CzyEdycja { get { return _CzyEdycja; } set { _CzyEdycja = value; } }
-        public int IdPola { get { return _IdPola; } set { _IdPola = value; UstawNazwe(IdPola); } }
-        public string Nazwa { get { return _Nazwa; } set { _Nazwa = value; OnPropertyChanged("Nazwa"); } }
-        public string Tekst { get { return _Tekst; } set { _Tekst = value; OnPropertyChanged("Tekst"); GenerujPodglad(); } }
-        public List<TYPE> ListaTypow { get { return _ListaTypow; } set { _ListaTypow = value; OnPropertyChanged("ListaTypow"); } }
-        public TYPE Typ { get { return _Typ; } set { _Typ = value; OnPropertyChanged("Typ"); GenerujPodglad(); } }
-        public int Szerokosc { get { return _Szerokosc; } set { _Szerokosc = value; OnPropertyChanged("Szerokosc"); GenerujPodglad(); } }
-        public int Wysokosc { get { return _Wysokosc; } set { _Wysokosc = value; OnPropertyChanged("Wysokosc"); GenerujPodglad(); } }
-        public ImageSource Obraz { get { return _Obraz; } set { _Obraz = value; OnPropertyChanged("Obraz"); } }
-        public bool CzyPokazacTekst { get { return _CzyPokazacTekst; } set { _CzyPokazacTekst = value; OnPropertyChanged("CzyPokazacTekst"); GenerujPodglad(); } }
-        public FontFamily FontFamily { get { return _FontFamily; } set { _FontFamily = value; OnPropertyChanged("FontFamily"); } }
-        public float FontSize { get { return _FontSize; } set { _FontSize = value; OnPropertyChanged("FontSize"); } }
-        public FontWeight FontWeight { get { return _FontWeight; } set { _FontWeight = value; OnPropertyChanged("FontWeight"); } }
-        public string Info { get { return _Info; } set { _Info = value; OnPropertyChanged("Info"); } }
+        #region PROPERTIES
+
+        private bool czyEdycja = false;
+        public bool CzyEdycja { get { return czyEdycja; } set { czyEdycja = value; } }
+
+        private int idPola;
+        public int IdPola { get { return idPola; } set { idPola = value; UstawNazwe(IdPola); } }
+        
+        private string nazwa;
+        public string Nazwa { get { return nazwa; } set { nazwa = value; OnPropertyChanged("Nazwa"); } }
+        
+        private string tekst = "0123456789123";
+        public string Tekst { get { return tekst; } set { tekst = value; OnPropertyChanged("Tekst"); GenerujPodglad(); } }
+        
+        private List<TYPE> listaTypow;
+        public List<TYPE> ListaTypow { get { return listaTypow; } set { listaTypow = value; OnPropertyChanged("ListaTypow"); } }
+        
+        private TYPE typ = TYPE.EAN13;
+        public TYPE Typ { get { return typ; } set { typ = value; OnPropertyChanged("Typ"); GenerujPodglad(); } }
+        
+        private int szerokosc = 100;
+        public int Szerokosc { get { return szerokosc; } set { szerokosc = value; OnPropertyChanged("Szerokosc"); GenerujPodglad(); } }
+        
+        private int wysokosc = 100;
+        public int Wysokosc { get { return wysokosc; } set { wysokosc = value; OnPropertyChanged("Wysokosc"); GenerujPodglad(); } }
+        
+        private ImageSource source;
+        public ImageSource Source { get { return source; } set { source = value; OnPropertyChanged("Obraz"); } }
+        
+        private bool czyPokazacTekst = true;
+        public bool CzyPokazacTekst { get { return czyPokazacTekst; } set { czyPokazacTekst = value; OnPropertyChanged("CzyPokazacTekst"); GenerujPodglad(); } }
+        
+        private FontFamily fontFamily = new FontFamily("Microsoft Sans Serif");
+        public FontFamily FontFamily { get { return fontFamily; } set { fontFamily = value; OnPropertyChanged("FontFamily"); } }
+        
+        private float fontSize = 10;
+        public float FontSize { get { return fontSize; } set { fontSize = value; OnPropertyChanged("FontSize"); } }
+        
+        private FontWeight fontWeight = FontWeights.Normal;
+        public FontWeight FontWeight { get { return fontWeight; } set { fontWeight = value; OnPropertyChanged("FontWeight"); } }
+
+        private string info;
+        public string Info { get { return info; } set { info = value; OnPropertyChanged("Info"); } }
+
         #endregion
-        // ========================= MAIN ======================================
-        #region region MAIN
+        #region MAIN
+
         public NowyKodKrViewModel()
         {
             GenerujPodglad();
@@ -72,26 +86,25 @@ namespace EdytorEtykiet.ViewModel
             Tekst = dc.Tekst;
             Typ = dc.Typ;
             CzyPokazacTekst = dc.CzyPokazacTekst;
-            Obraz = dc.Obraz;
+            Source = dc.Source;
             Szerokosc = dc.Szerokosc;
             Wysokosc = dc.Wysokosc;
-
         }
 
         public void GenerujPodglad()
         {
             try
             {
-                Obraz = BarcodeHandler.UtworzKod(Typ, Tekst, Szerokosc, Wysokosc, CzyPokazacTekst);
+                Source = BarcodeHandler.UtworzKod(Typ, Tekst, Szerokosc, Wysokosc, CzyPokazacTekst);
                 Info = "";
             }
             catch (Exception ex)
             {
-                Obraz = null;
+                Source = null;
                 Info = ex.Message;
             }
-
         }
+
         #endregion
     }
 }

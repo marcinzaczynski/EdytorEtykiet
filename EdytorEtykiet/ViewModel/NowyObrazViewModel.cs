@@ -29,23 +29,23 @@ namespace EdytorEtykiet.ViewModel
         private string nazwa;
         public string Nazwa { get { return nazwa; } set { nazwa = value; OnPropertyChanged("Nazwa"); } }
 
-        private double width;
-        public double Width { get { return width; } set { width = value; OnPropertyChanged("Width"); } }
+        //private double width;
+        //public double Width { get { return width; } set { width = value; OnPropertyChanged("Width"); } }
 
-        private double height;
-        public double Height { get { return height; } set { height = value; OnPropertyChanged("Height"); } }
+        //private double height;
+        //public double Height { get { return height; } set { height = value; OnPropertyChanged("Height"); } }
 
-        private double proporcja;
-        public double Proporcja { get { return proporcja; } set { proporcja = value; } }
+        //private double proporcja;
+        //public double Proporcja { get { return proporcja; } set { proporcja = value; } }
 
         private ImageSource source;
         public ImageSource Source { get { return source; } set { source = value; OnPropertyChanged("Source"); } }
 
         private string pelnaSciezka;
-        public string PelnaSciezka { get { return pelnaSciezka; } set { pelnaSciezka = value; OnPropertyChanged("PelnaSciezka"); } }
+        public string PelnaSciezka { get { return pelnaSciezka; } set { pelnaSciezka = value; WyodrebnijNazwePliku(); OnPropertyChanged("PelnaSciezka"); } }
 
         private string nazwaPliku;
-        public string NazwaPliku { get { return nazwaPliku; } set { nazwaPliku = value; WyodrebnijNazwePliku(); OnPropertyChanged("NazwaPliku"); } }
+        public string NazwaPliku { get { return nazwaPliku; } set { nazwaPliku = value; OnPropertyChanged("NazwaPliku"); } }
 
         private int katObrotu = 0;
         public int KatObrotu { get { return katObrotu; } set { katObrotu = value; OnPropertyChanged("KatObrot"); } }
@@ -66,9 +66,9 @@ namespace EdytorEtykiet.ViewModel
                 PelnaSciezka = imgSciezka;
 
                 Source = new ImageSourceConverter().ConvertFromString(imgSciezka) as ImageSource;
-                Proporcja = (Source.Width / Source.Height);
-                Width = Source.Width;
-                Height = Source.Height;
+                //Proporcja = (Source.Width / Source.Height);
+                //Width = Source.Width;
+                //Height = Source.Height;
             }
             return false;
         }
