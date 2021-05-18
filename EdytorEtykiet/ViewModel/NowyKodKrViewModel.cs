@@ -78,19 +78,6 @@ namespace EdytorEtykiet.ViewModel
             Nazwa = "KODKR_" + _id.ToString().PadLeft(3, '0');
         }
 
-        public void Odswiez(NowyKodKrViewModel dc)
-        {
-            //TXTCzyEdycja 
-            IdPola = dc.IdPola;
-            Nazwa = dc.Nazwa;
-            Tekst = dc.Tekst;
-            Typ = dc.Typ;
-            CzyPokazacTekst = dc.CzyPokazacTekst;
-            Source = dc.Source;
-            Szerokosc = dc.Szerokosc;
-            Wysokosc = dc.Wysokosc;
-        }
-
         public void GenerujPodglad()
         {
             try

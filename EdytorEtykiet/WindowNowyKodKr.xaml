@@ -74,7 +74,7 @@
         <GroupBox Grid.Row="0" Grid.Column="1" Header="Podgląd">
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Name="spPrev">
                 <Border BorderThickness="1" BorderBrush="LightGray">
-                    <Image Source="{Binding Obraz}" Width="{Binding Szerokosc}" Height="{Binding Wysokosc}" Margin="0" HorizontalAlignment="Left" Name="Img" Stretch="None" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" UseLayoutRounding="True"/>
+                    <Image Source="{Binding Source}" Width="{Binding Szerokosc}" Height="{Binding Wysokosc}" Margin="0" HorizontalAlignment="Left" Name="Img" Stretch="None" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor" UseLayoutRounding="True"/>
                 </Border>
             </StackPanel>
         </GroupBox>

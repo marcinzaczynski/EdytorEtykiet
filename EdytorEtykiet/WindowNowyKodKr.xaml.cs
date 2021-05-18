@@ -14,21 +14,34 @@ namespace EdytorEtykiet
     /// </summary>
     public partial class WindowNowyKodKr : Window
     {
-        public static event DodajNowyElementDelegat NowyKodKrEvent;
-        public static event EdytujElementDelegat EdytujEvent;
+        public static event DodajNowyElementDelegat2 NowyKodKrEvent;
+        public static event EdytujElementDelegat2 EdytujEvent;
 
         FontDialog fontDialog = new FontDialog();
 
-        public NowyKodKrModel NowyKodKr;
+        public NowyKodKrModel NowyKodKr = new NowyKodKrModel();
         public WindowNowyKodKr(NowyKodKrModel nowy_kodkr = null, int id_pola = 0)
         {
             InitializeComponent();
             if (nowy_kodkr != null)
             {
 
-                var dc = nowy_kodkr.DataContext as NowyKodKrViewModel;
-                NowyKodKrVM.Odswiez(dc);
                 NowyKodKrVM.CzyEdycja = true;
+
+
+                NowyKodKrVM.IdPola = nowy_kodkr.IdPola;
+                NowyKodKrVM.Nazwa = nowy_kodkr.Nazwa;
+                NowyKodKrVM.Tekst = nowy_kodkr.Tekst;
+                NowyKodKrVM.Typ = nowy_kodkr.Typ;
+                NowyKodKrVM.Szerokosc = nowy_kodkr.Szerokosc;
+                NowyKodKrVM.Wysokosc = nowy_kodkr.Wysokosc;
+                NowyKodKrVM.CzyPokazacTekst = nowy_kodkr.CzyPokazacTekst;
+                NowyKodKrVM.FontFamily = nowy_kodkr.FontFamily;
+                NowyKodKrVM.FontSize = nowy_kodkr.FontSize;
+                NowyKodKrVM.FontWeight = nowy_kodkr.FontWeight;
+
+
+                NowyKodKrVM.GenerujPodglad();
             }
             else
             {
@@ -36,7 +49,6 @@ namespace EdytorEtykiet
             }
             NowyKodKr = new NowyKodKrModel();
             NowyKodKr.IdPola = NowyKodKrVM.IdPola;
-            NowyKodKr.DataContext = NowyKodKrVM;
 
             NowyKodKrVM.ListaTypow = BarcodeHandler.PobierzListeTypow();
         }
@@ -45,14 +57,18 @@ namespace EdytorEtykiet
 
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            AppHandler.BindData(NowyKodKr); // tylko pola z klasy Image
-
+            NowyKodKr.IdPola = NowyKodKrVM.IdPola;
+            NowyKodKr.Nazwa = NowyKodKrVM.Nazwa;
             NowyKodKr.Tekst = NowyKodKrVM.Tekst;
             NowyKodKr.Typ = NowyKodKrVM.Typ;
             NowyKodKr.CzyPokazacTekst = NowyKodKrVM.CzyPokazacTekst;
+            NowyKodKr.Szerokosc = NowyKodKrVM.Szerokosc;
+            NowyKodKr.Wysokosc = NowyKodKrVM.Wysokosc;
+            NowyKodKr.FontFamily = NowyKodKrVM.FontFamily;
+            NowyKodKr.FontSize = NowyKodKrVM.FontSize;
+            NowyKodKr.FontWeight = NowyKodKrVM.FontWeight;
+
             var nameExist = MainWindow.ListaElementow.Where(c => c.Name == NowyKodKrVM.Nazwa).FirstOrDefault();
-
-
 
             if (NowyKodKrVM.CzyEdycja)
             {
@@ -76,7 +92,7 @@ namespace EdytorEtykiet
 
         private void CommandOk_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (NowyKodKrVM.Obraz != null)
+            if (NowyKodKrVM.Source != null)
             {
                 e.CanExecute = true;
             }

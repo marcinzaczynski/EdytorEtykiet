@@ -21,6 +21,7 @@ namespace EdytorEtykiet.Helpers
         {
             Barcode b = new Barcode();
             b.IncludeLabel = _czy_pokazac_tekst;
+            
             return Globals.ImageToImageSource(b.Encode(_format_kodu, _tekst, (int)_szer, (int)_wys));
         }
 

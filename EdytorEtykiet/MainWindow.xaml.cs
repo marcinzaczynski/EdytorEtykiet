@@ -39,8 +39,8 @@ namespace EdytorEtykiet
             WindowNowyTekst.NowyTekstEvent += new DodajNowyElementDelegat2(DodajElementDoEtykiety2);
             WindowNowyTekst.EdytujEvent += new EdytujElementDelegat2(EdytujElement2);
 
-            WindowNowyKodKr.NowyKodKrEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
-            WindowNowyKodKr.EdytujEvent += new EdytujElementDelegat(EdytujElement);
+            WindowNowyKodKr.NowyKodKrEvent += new DodajNowyElementDelegat2(DodajElementDoEtykiety2);
+            WindowNowyKodKr.EdytujEvent += new EdytujElementDelegat2(EdytujElement2);
 
             WindowNowyObraz.NowyObrazEvent += new DodajNowyElementDelegat2(DodajElementDoEtykiety2);
             WindowNowyObraz.EdytujEvent += new EdytujElementDelegat2(EdytujElement2);
@@ -354,17 +354,30 @@ namespace EdytorEtykiet
                 case TypyPol.PicDb:
                     break;
                 case TypyPol.Barcode:
-                    MainVM.ListaElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                    if (!edycja) MainVM.ListaElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                    nowyElement = new Image();
+                    (nowyElement as Image).Name = (_nowe_pole as NowyKodKrModel).Nazwa;
+
+                    (nowyElement as Image).Source = BarcodeHandler.UtworzKod((_nowe_pole as NowyKodKrModel).Typ
+                        , (_nowe_pole as NowyKodKrModel).Tekst
+                        , (_nowe_pole as NowyKodKrModel).Szerokosc
+                        , (_nowe_pole as NowyKodKrModel).Wysokosc
+                        , (_nowe_pole as NowyKodKrModel).CzyPokazacTekst);
+
+                    ListaElementow2.Add(_nowe_pole);
+                    EtykietaCanvas.Children.Add(nowyElement);
+                    Canvas.SetLeft(nowyElement, left);
+                    Canvas.SetTop(nowyElement, top);
+
+                    nowyElement.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
+                    nowyElement.PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
+                    nowyElement.Cursor = Cursors.SizeAll;
                     break;
                 case TypyPol.BarcodeDb:
                     break;
                 default:
                     break;
             }
-
-            
-
-            
         }
 
         private void EdytujElement(FrameworkElement _edytowanyElement)

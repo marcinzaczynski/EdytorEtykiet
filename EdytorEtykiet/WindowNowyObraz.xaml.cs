@@ -39,7 +39,6 @@ namespace EdytorEtykiet
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
 
-            //NowyObraz.Source = NowyObrazVM.Source;
             NowyObraz.IdPola = NowyObrazVM.IdPola;
             NowyObraz.Nazwa = NowyObrazVM.Nazwa;
             NowyObraz.PelnaSciezka = NowyObrazVM.PelnaSciezka;
