@@ -156,7 +156,8 @@ namespace EdytorEtykiet
             switch (elementDoEdycji.TypPola)
             {
                 case TypyPol.Barcode:
-                    new WindowNowyKodKr().ShowDialog();
+                    var elBarcode = (elementDoEdycji as NowyKodKrModel);
+                    new WindowNowyKodKr(elBarcode).ShowDialog();
                     break;
                 case TypyPol.Txt:
                     var elTxt = (elementDoEdycji as NowyTekstModel);

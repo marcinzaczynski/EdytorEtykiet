@@ -95,7 +95,7 @@ namespace EdytorEtykiet.Helpers
             new XElement("WzorEtykiety",
                 (from item in _etykieta
                  where item.TypPola == TypyPol.Txt
-                 select new XElement("TXT",
+                 select new XElement(item.TypPola.ToString(),
                      new XElement("IdPola", (item as NowyTekstModel).IdPola),
                      new XElement("Nazwa", (item as NowyTekstModel).Nazwa),
                      new XElement("Tekst", (item as NowyTekstModel).Tekst),
@@ -115,11 +115,26 @@ namespace EdytorEtykiet.Helpers
                 ),
                 (from item in _etykieta
                  where item.TypPola == TypyPol.Pic
-                 select new XElement("PIC",
+                 select new XElement(item.TypPola.ToString(),
                      new XElement("IdPola", (item as NowyObrazModel).IdPola),
                      new XElement("Nazwa", (item as NowyObrazModel).Nazwa),
                      new XElement("PelnaSciezka", (item as NowyObrazModel).PelnaSciezka),
                      new XElement("KatObrotu", (item as NowyObrazModel).KatObrotu)
+                     )
+                ),
+                (from item in _etykieta
+                 where item.TypPola == TypyPol.Barcode
+                 select new XElement(item.TypPola.ToString(),
+                     new XElement("IdPola", (item as NowyKodKrModel).IdPola),
+                     new XElement("Nazwa", (item as NowyKodKrModel).Nazwa),
+                     new XElement("Tekst", (item as NowyKodKrModel).Tekst),
+                     new XElement("Typ", (item as NowyKodKrModel).Typ),
+                     new XElement("CzyPokazacTekst", (item as NowyKodKrModel).CzyPokazacTekst),
+                     new XElement("Szerokosc", (item as NowyKodKrModel).Szerokosc),
+                     new XElement("Wysokosc", (item as NowyKodKrModel).Wysokosc),
+                     new XElement("FontFamily", (item as NowyKodKrModel).FontFamily),
+                     new XElement("FontSize", (item as NowyKodKrModel).FontSize),
+                     new XElement("FontWeight", (item as NowyKodKrModel).FontWeight)
                      )
                 )
             );

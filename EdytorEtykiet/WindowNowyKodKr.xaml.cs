@@ -25,10 +25,7 @@ namespace EdytorEtykiet
             InitializeComponent();
             if (nowy_kodkr != null)
             {
-
                 NowyKodKrVM.CzyEdycja = true;
-
-
                 NowyKodKrVM.IdPola = nowy_kodkr.IdPola;
                 NowyKodKrVM.Nazwa = nowy_kodkr.Nazwa;
                 NowyKodKrVM.Tekst = nowy_kodkr.Tekst;

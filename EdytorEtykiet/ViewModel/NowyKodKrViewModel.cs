@@ -48,7 +48,7 @@ namespace EdytorEtykiet.ViewModel
         public int Wysokosc { get { return wysokosc; } set { wysokosc = value; OnPropertyChanged("Wysokosc"); GenerujPodglad(); } }
         
         private ImageSource source;
-        public ImageSource Source { get { return source; } set { source = value; OnPropertyChanged("Obraz"); } }
+        public ImageSource Source { get { return source; } set { source = value; OnPropertyChanged("Source"); } }
         
         private bool czyPokazacTekst = true;
         public bool CzyPokazacTekst { get { return czyPokazacTekst; } set { czyPokazacTekst = value; OnPropertyChanged("CzyPokazacTekst"); GenerujPodglad(); } }
