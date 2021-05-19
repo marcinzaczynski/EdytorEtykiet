@@ -9,14 +9,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace EdytorEtykiet
 {
-    public delegate void DodajNowyElementDelegat(FrameworkElement newElement, double left, double top, bool edit = false);
-    public delegate void EdytujElementDelegat(FrameworkElement edytowanyElement);
 
-    public delegate void DodajNowyElementDelegat2(INowyElement newElement, double left, double top, bool edit = false);
-    public delegate void EdytujElementDelegat2(INowyElement edytowanyElement);
+    public delegate void DodajNowyElementDelegat(INowyElement newElement, double left, double top, bool edit = false);
+    public delegate void EdytujElementDelegat(INowyElement edytowanyElement);
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -29,24 +28,29 @@ namespace EdytorEtykiet
 
         object przesuwanyElement;
         double SliderWartoscPowiekszenia = 0.2;
-        public static List<FrameworkElement> ListaElementow = new List<FrameworkElement>();
         public static List<INowyElement> ListaElementow2 = new List<INowyElement>();
+        private NowaEtykietaModel NowaEtykieta = new NowaEtykietaModel();
 
         #region MAIN
+
         public MainWindow()
         {
             InitializeComponent();
-            WindowNowyTekst.NowyTekstEvent += new DodajNowyElementDelegat2(DodajElementDoEtykiety2);
-            WindowNowyTekst.EdytujEvent += new EdytujElementDelegat2(EdytujElement2);
+            WindowNowyTekst.NowyTekstEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
+            WindowNowyTekst.EdytujEvent += new EdytujElementDelegat(EdytujElement);
 
-            WindowNowyKodKr.NowyKodKrEvent += new DodajNowyElementDelegat2(DodajElementDoEtykiety2);
-            WindowNowyKodKr.EdytujEvent += new EdytujElementDelegat2(EdytujElement2);
+            WindowNowyKodKr.NowyKodKrEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
+            WindowNowyKodKr.EdytujEvent += new EdytujElementDelegat(EdytujElement);
 
-            WindowNowyObraz.NowyObrazEvent += new DodajNowyElementDelegat2(DodajElementDoEtykiety2);
-            WindowNowyObraz.EdytujEvent += new EdytujElementDelegat2(EdytujElement2);
+            WindowNowyObraz.NowyObrazEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
+            WindowNowyObraz.EdytujEvent += new EdytujElementDelegat(EdytujElement);
 
             PreviewMouseMove += this.MouseMove;
             PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
+            ListaElementow2.Add(NowaEtykieta);
+            MainVM.SzerPx = NowaEtykieta.Szerokosc;
+            MainVM.WysPx = NowaEtykieta.Wysokosc;
+            MainVM.NazwaEtykiety = NowaEtykieta.Nazwa;
         }
         #endregion
 
@@ -54,7 +58,29 @@ namespace EdytorEtykiet
 
         private void Command_OtworzPlik(object sender, ExecutedRoutedEventArgs e)
         {
-            Globals.OtworzPlik();
+
+
+            XElement element = Globals.OtworzPlik();
+
+            if (element != null)
+            { 
+                IEnumerable<XElement> allChildElements = element.Elements();
+                foreach (var item in allChildElements)
+                {
+                    if (item.Name == "Txt")
+                    {
+                        MessageBox.Show(String.Format("jest tekst i ma {0} nodów", item.Nodes().Count()));
+                    }
+                    if (item.Name == "Pic")
+                    {
+                        MessageBox.Show(String.Format("jest obraz i ma {0} nodów", item.Nodes().Count()));
+                    }
+                    if (item.Name == "Barcode")
+                    {
+                        MessageBox.Show(String.Format("jest kodkr i ma {0} nodów", item.Nodes().Count()));
+                    }
+                }
+            }
         }
 
         private void Command_ZapiszPLik(object sender, ExecutedRoutedEventArgs e)
@@ -108,7 +134,7 @@ namespace EdytorEtykiet
 
         private void Command_NowyKodKr(object sender, ExecutedRoutedEventArgs e)
         {
-            var listaNowyKodKr = ListaElementow.Where(r => r is NowyKodKrModel).ToList();
+            var listaNowyKodKr = ListaElementow2.Where(r => r is NowyKodKrModel).ToList();
             var _IdPola = 1;
             if (listaNowyKodKr.Count > 0)
             {
@@ -187,7 +213,9 @@ namespace EdytorEtykiet
             {
                 var zaznaczonyElement = ZnajdzElementPoNazwie(MainVM.NazwaZaznaczonegoElementu);
 
-                ListaElementow.Remove(zaznaczonyElement);
+                var found = ListaElementow2.Find(r => r.Nazwa == zaznaczonyElement.Name);
+                if (found != null) ListaElementow2.Remove(found);
+
                 EtykietaCanvas.Children.Remove(zaznaczonyElement);
 
                 switch ((zaznaczonyElement as INowyElement).TypPola)
@@ -277,28 +305,7 @@ namespace EdytorEtykiet
 
         #region DODAJ / POPRAW ELEMENT
 
-        private void DodajElementDoEtykiety(FrameworkElement _nowe_pole, double left = 5, double top = 5, bool edycja = false)
-        {
-            if (edycja == false)
-            {
-                if (_nowe_pole is NowyKodKrModel)
-                {
-                    MainVM.ListaElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Name });
-                }
-            }
-
-            ListaElementow.Add(_nowe_pole);
-            EtykietaCanvas.Children.Add(_nowe_pole);
-
-            Canvas.SetLeft(_nowe_pole, left);
-            Canvas.SetTop(_nowe_pole, top);
-
-            _nowe_pole.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
-            _nowe_pole.PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
-            _nowe_pole.Cursor = Cursors.SizeAll;
-        }
-
-        private void DodajElementDoEtykiety2(INowyElement _nowe_pole, double left = 5, double top = 5, bool edycja = false)
+        private void DodajElementDoEtykiety(INowyElement _nowe_pole, double left = 5, double top = 5, bool edycja = false)
         {
             FrameworkElement nowyElement;
             switch (_nowe_pole.TypPola)
@@ -381,28 +388,8 @@ namespace EdytorEtykiet
             }
         }
 
-        private void EdytujElement(FrameworkElement _edytowanyElement)
-        {
-            var edytowanyElement = ZnajdzElementPoNazwie(_edytowanyElement.Name);
-
-            if (edytowanyElement != null)
-            {
-                double tmpLeft = Canvas.GetLeft(edytowanyElement);
-                double tmpTop = Canvas.GetTop(edytowanyElement);
-
-                ListaElementow.Remove(edytowanyElement);
-                EtykietaCanvas.Children.Remove(edytowanyElement);
-
-                DodajElementDoEtykiety(_edytowanyElement, tmpLeft, tmpTop, true);
-
-                //MainCanvas.Children.Add(control);
-
-                //Canvas.SetTop(control, tmpTop);
-                //Canvas.SetLeft(control, tmpLeft);
-            }
-        }
-
-        private void EdytujElement2(INowyElement _edytowanyElement)
+       
+        private void EdytujElement(INowyElement _edytowanyElement)
         {
             var edytowanyElement = ZnajdzElementPoNazwie(_edytowanyElement.Nazwa);
 
@@ -411,14 +398,14 @@ namespace EdytorEtykiet
                 double tmpLeft = Canvas.GetLeft(edytowanyElement);
                 double tmpTop = Canvas.GetTop(edytowanyElement);
 
-                ListaElementow.Remove(edytowanyElement);
+                //ListaElementow.Remove(edytowanyElement);
 
                 var found = ListaElementow2.Find(r => r.Nazwa == edytowanyElement.Name);
                 if (found != null) ListaElementow2.Remove(found);
 
                 EtykietaCanvas.Children.Remove(edytowanyElement);
 
-                DodajElementDoEtykiety2(_edytowanyElement, tmpLeft, tmpTop, true);
+                DodajElementDoEtykiety(_edytowanyElement, tmpLeft, tmpTop, true);
             }
         }
 

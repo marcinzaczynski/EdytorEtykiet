@@ -14,8 +14,8 @@ namespace EdytorEtykiet
     /// </summary>
     public partial class WindowNowyTekst : Window
     {
-        public static event DodajNowyElementDelegat2 NowyTekstEvent;
-        public static event EdytujElementDelegat2 EdytujEvent;
+        public static event DodajNowyElementDelegat NowyTekstEvent;
+        public static event EdytujElementDelegat EdytujEvent;
 
         public NowyTekstModel NowyTekst = new NowyTekstModel();
 
@@ -71,7 +71,7 @@ namespace EdytorEtykiet
             NowyTekst.WyrownanieWPoziomie = NowyTekstVM.WyrownanieWPoziomie;
             NowyTekst.WyrownanieWPionie = NowyTekstVM.WyrownanieWPionie;  
 
-            var nameExist = MainWindow.ListaElementow.Where(c => c.Name == NowyTekstVM.Nazwa).FirstOrDefault();
+            var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyTekstVM.Nazwa).FirstOrDefault();
 
 
 

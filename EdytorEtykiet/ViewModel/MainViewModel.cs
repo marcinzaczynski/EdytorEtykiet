@@ -8,8 +8,8 @@ namespace EdytorEtykiet.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        // ========================= PROPERTY CHANGE ===========================
-        #region region PROPERTY CHANGE
+        #region  PROPERTY CHANGE
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -18,9 +18,7 @@ namespace EdytorEtykiet.ViewModel
         }
 
         #endregion
-        // =====================================================================
-        // ========================= PROPERTIES ================================
-        #region region PROPERTIES
+        #region FIELDS & PROPERTIES
 
         private const int DodatkowaDlugoscMarginesu = 10; // marginesy wychodzą poza Canvas na rogach
         private const int DlugoscWysunieciaMarginesu = 5;// długość wysunięcia marginesu po za canvas
@@ -90,16 +88,18 @@ namespace EdytorEtykiet.ViewModel
         public double OgraniczenieG { get { return ograniczenieG; } set { ograniczenieG = value; OnPropertyChanged("OgraniczenieG"); } }
         public double OgraniczenieD { get { return ograniczenieD; } set { ograniczenieD = value; OnPropertyChanged("OgraniczenieD"); } }
         public string NazwaEtykiety { get { return nazwaEtykiety; } set { nazwaEtykiety = value; OnPropertyChanged("NazwaEtykiety"); } }
+
         #endregion
-        // ========================= MAIN ======================================
-        #region region MAIN
+        #region MAIN
+
         public MainViewModel()
         {
             UtworzDrzewoElementow();
         }
+
         #endregion
-        // ========================= DRZEWO ELEMENETÓW =========================
-        #region region DRZEWO ELEMENTÓW
+        #region DRZEWO ELEMENTÓW
+
         private void UtworzDrzewoElementow()
         {
             ListaElementow = new ObservableCollection<ElementEtykiety>();
@@ -120,8 +120,8 @@ namespace EdytorEtykiet.ViewModel
             ListaElementow[5].Subelementy = new ObservableCollection<ElementEtykiety>();
             ListaElementow[6].Subelementy = new ObservableCollection<ElementEtykiety>();
         }
+
         #endregion
-        // =====================================================================
     }
     public class ElementEtykiety : INotifyPropertyChanged
     {

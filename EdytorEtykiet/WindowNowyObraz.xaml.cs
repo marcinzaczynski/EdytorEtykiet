@@ -12,8 +12,8 @@ namespace EdytorEtykiet
     /// </summary>
     public partial class WindowNowyObraz : Window
     {
-        public static event DodajNowyElementDelegat2 NowyObrazEvent;
-        public static event EdytujElementDelegat2 EdytujEvent;
+        public static event DodajNowyElementDelegat NowyObrazEvent;
+        public static event EdytujElementDelegat EdytujEvent;
 
         public NowyObrazModel NowyObraz = new NowyObrazModel();
 

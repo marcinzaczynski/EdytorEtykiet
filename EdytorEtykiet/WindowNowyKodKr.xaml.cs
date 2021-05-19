@@ -14,8 +14,8 @@ namespace EdytorEtykiet
     /// </summary>
     public partial class WindowNowyKodKr : Window
     {
-        public static event DodajNowyElementDelegat2 NowyKodKrEvent;
-        public static event EdytujElementDelegat2 EdytujEvent;
+        public static event DodajNowyElementDelegat NowyKodKrEvent;
+        public static event EdytujElementDelegat EdytujEvent;
 
         FontDialog fontDialog = new FontDialog();
 
@@ -65,7 +65,7 @@ namespace EdytorEtykiet
             NowyKodKr.FontSize = NowyKodKrVM.FontSize;
             NowyKodKr.FontWeight = NowyKodKrVM.FontWeight;
 
-            var nameExist = MainWindow.ListaElementow.Where(c => c.Name == NowyKodKrVM.Nazwa).FirstOrDefault();
+            var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyKodKrVM.Nazwa).FirstOrDefault();
 
             if (NowyKodKrVM.CzyEdycja)
             {

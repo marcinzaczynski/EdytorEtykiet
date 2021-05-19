@@ -155,12 +155,6 @@ namespace EdytorEtykiet.Helpers
             {
                 try
                 {
-                    //FileStream filestream = File.Create(dlg.FileName);
-                    //StreamWriter streamwriter = new StreamWriter(filestream);
-                    //streamwriter.Write(FormatXml(mystrXAML));
-                    //streamwriter.Close();
-                    //filestream.Close();
-                    //File.CreateText(dlg.FileName);
                     element.Save(dlg.FileName);
                 }
                 catch (Exception)
@@ -172,32 +166,10 @@ namespace EdytorEtykiet.Helpers
             return result;
         }
 
-        private static string FormatXml(string xml)
-        {
-            try
-            {
-                XDocument doc = XDocument.Parse(xml);
-
-                XNamespace ns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-
-                // USUNIĘCIE MARGINESÓW Z XMLa
-                //doc.Descendants(ns + "Label")
-                //    .Where(x=> (string)x.Attribute("Name") == "MarginT" || (string)x.Attribute("Name") == "MarginB" || (string)x.Attribute("Name") == "MarginL" || (string)x.Attribute("Name") == "MarginR")
-                //    .Remove();
-
-
-                return doc.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static void OtworzPlik()
+        public static XElement OtworzPlik()
         {
             OpenFileDialog dlg = new OpenFileDialog();
-
+            XElement element = null;
 
             dlg.DefaultExt = ".etk";
             dlg.Filter = "GEOSoft - etykieta (.etk)|*.etk";
@@ -206,18 +178,17 @@ namespace EdytorEtykiet.Helpers
 
             if (result)
             {
-                string aa = File.ReadAllText(dlg.FileName);
                 try
                 {
-                    StringReader stringReader = new StringReader(aa);
-                    XmlReader xmlReader = XmlReader.Create(stringReader);
-                    EtykietaCanvas et = (EtykietaCanvas)XamlReader.Load(xmlReader);
+                    element = XElement.Load(dlg.FileName);
                 }
                 catch (Exception)
                 {
                     throw;
+                    
                 }
             }
+            return element;
         }
     }
 }
