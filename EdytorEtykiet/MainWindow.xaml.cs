@@ -109,6 +109,20 @@ namespace EdytorEtykiet
                 MainVM.WysPx = wne.NowaEtykietaVM.WysPx;
                 MainVM.SzerPx = wne.NowaEtykietaVM.SzerPx;
                 MainVM.NazwaEtykiety = wne.NowaEtykietaVM.NazwaEtykiety;
+                MainVM.UtworzDrzewoElementow();
+
+
+                EtykietaCanvas.Children.Clear();               
+                ListaElementow2.Clear();
+                
+                NowaEtykieta.Wysokosc = Convert.ToInt32(wne.NowaEtykietaVM.WysPx); 
+                NowaEtykieta.Szerokosc = Convert.ToInt32(wne.NowaEtykietaVM.SzerPx);
+                NowaEtykieta.Nazwa = wne.NowaEtykietaVM.NazwaEtykiety;
+
+                EtykietaCanvas.Width = NowaEtykieta.Szerokosc;
+                EtykietaCanvas.Height = NowaEtykieta.Wysokosc;
+
+                ListaElementow2.Add(NowaEtykieta);
             }
         }
 
@@ -221,13 +235,13 @@ namespace EdytorEtykiet
                 switch ((zaznaczonyElement as INowyElement).TypPola)
                 {
                     case TypyPol.Barcode:
-                        MainVM.ListaElementow[2].Subelementy.Remove(MainVM.ListaElementow[2].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
+                        MainVM.DrzewoElementow[2].Subelementy.Remove(MainVM.DrzewoElementow[2].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
                         break;
                     case TypyPol.Txt:
-                        MainVM.ListaElementow[0].Subelementy.Remove(MainVM.ListaElementow[0].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
+                        MainVM.DrzewoElementow[0].Subelementy.Remove(MainVM.DrzewoElementow[0].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
                         break;
                     case TypyPol.Pic:
-                        MainVM.ListaElementow[1].Subelementy.Remove(MainVM.ListaElementow[1].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
+                        MainVM.DrzewoElementow[1].Subelementy.Remove(MainVM.DrzewoElementow[1].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
                         break;
                     default:
                         break;
@@ -313,7 +327,7 @@ namespace EdytorEtykiet
                 case TypyPol.Canvas:
                     break;
                 case TypyPol.Txt:
-                    if (!edycja) MainVM.ListaElementow[1].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                    if (!edycja) MainVM.DrzewoElementow[1].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
                     nowyElement = new Label();
                     (nowyElement as Label).Name = (_nowe_pole as NowyTekstModel).Nazwa;
                     (nowyElement as Label).Content = (_nowe_pole as NowyTekstModel).Tekst;
@@ -343,7 +357,7 @@ namespace EdytorEtykiet
                 case TypyPol.TxtDb:
                     break;
                 case TypyPol.Pic:
-                    if (!edycja) MainVM.ListaElementow[3].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                    if (!edycja) MainVM.DrzewoElementow[3].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
                     nowyElement = new Image();
                     (nowyElement as Image).Name = (_nowe_pole as NowyObrazModel).Nazwa;
                     (nowyElement as Image).Source = new ImageSourceConverter().ConvertFromString((_nowe_pole as NowyObrazModel).PelnaSciezka) as ImageSource;
@@ -362,7 +376,7 @@ namespace EdytorEtykiet
                 case TypyPol.PicDb:
                     break;
                 case TypyPol.Barcode:
-                    if (!edycja) MainVM.ListaElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                    if (!edycja) MainVM.DrzewoElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
                     nowyElement = new Image();
                     (nowyElement as Image).Name = (_nowe_pole as NowyKodKrModel).Nazwa;
 
@@ -552,7 +566,7 @@ namespace EdytorEtykiet
                 return;
             }
 
-            var toSelect = MainVM.ListaElementow[type].Subelementy.Where(r => r.NazwaElementu == name).FirstOrDefault();
+            var toSelect = MainVM.DrzewoElementow[type].Subelementy.Where(r => r.NazwaElementu == name).FirstOrDefault();
 
             if (toSelect != null)
             {

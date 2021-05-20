@@ -123,8 +123,14 @@
                 <Label Name="MarginesL" Style="{StaticResource WygladMarginesu}" Cursor="ScrollWE" Width="2" Height="{Binding DlugoscMarginesuPionowego}" Canvas.Top="{Binding PoczatekMarginesu}" Canvas.Left="{Binding DomyslnaPozycjaMarginesuL, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 <Label Name="MarginesP" Style="{StaticResource WygladMarginesu}" Cursor="ScrollWE" Width="2" Height="{Binding DlugoscMarginesuPionowego}" Canvas.Top="{Binding PoczatekMarginesu}" Canvas.Left="{Binding DomyslnaPozycjaMarginesuP, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
             </helpers:EtykietaCanvas>
+            
         </ScrollViewer>
-        
+        <Canvas>
+            <Canvas.LayoutTransform>
+                <ScaleTransform x:Name="EtykietaCanvasZmianaSkali2"/>
+            </Canvas.LayoutTransform>
+            <ContentPresenter Content="{Binding}"/>
+        </Canvas>
         <GroupBox Grid.Row="3" Grid.Column="1" Header="Powiększenie">
             <StackPanel Orientation="Horizontal">
                 <Slider x:Name="SliderPowiekszenie" Width="200" Value="1" Minimum="0.2" Maximum="3" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="SliderPowiekszenie_ValueChanged" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"/>
