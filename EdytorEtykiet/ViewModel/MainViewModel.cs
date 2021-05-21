@@ -47,7 +47,7 @@ namespace EdytorEtykiet.ViewModel
         public double DomyslnaPozycjaMarginesuL { get { return domyslnaPozycjaMarginesuL; } set { domyslnaPozycjaMarginesuL = value; OnPropertyChanged("DomyslnaPozycjaMarginesuL"); } }
 
         private ObservableCollection<ElementEtykiety> drzewoElementow;
-        public ObservableCollection<ElementEtykiety> DrzewoElementow { get { return drzewoElementow; } set { drzewoElementow = value; OnPropertyChanged("ListaElementow"); } }
+        public ObservableCollection<ElementEtykiety> DrzewoElementow { get { return drzewoElementow; } set { drzewoElementow = value; OnPropertyChanged("DrzewoElementow"); } }
 
         private string nazwaZaznaczonegoElementu;
         public string NazwaZaznaczonegoElementu { get { return nazwaZaznaczonegoElementu; } set { nazwaZaznaczonegoElementu = value; OnPropertyChanged("NazwaZaznaczonegoElementu"); } }
@@ -101,6 +101,7 @@ namespace EdytorEtykiet.ViewModel
 
         public void UtworzDrzewoElementow()
         {
+            DrzewoElementow = null;
             DrzewoElementow = new ObservableCollection<ElementEtykiety>();
             DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Etykieta", TypPola = TypyPol.Canvas });
             DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst", TypPola = TypyPol.Txt });

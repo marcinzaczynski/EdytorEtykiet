@@ -91,7 +91,7 @@
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="0" VerticalScrollBarVisibility="Auto">
             <GroupBox Header=" .: Elementy :. ">
-                <TreeView BorderBrush="{x:Null}" ItemsSource="{Binding ListaElementow}">
+                <TreeView BorderBrush="{x:Null}" ItemsSource="{Binding DrzewoElementow}">
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}">
                             <Setter Property="IsExpanded" Value="True" />
@@ -118,6 +118,7 @@
                 <Canvas.LayoutTransform>
                     <ScaleTransform x:Name="EtykietaCanvasZmianaSkali"/>
                 </Canvas.LayoutTransform>
+                <ContentPresenter Content="{Binding}"/>
                 <Label Name="MarginesG" Style="{StaticResource WygladMarginesu}" Cursor="ScrollNS" Width="{Binding DlugoscMarginesuPoziomego}" Height="2" Canvas.Left="{Binding PoczatekMarginesu}" Canvas.Top="{Binding DomyslnaPozycjaMarginesuG, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 <Label Name="MarginesD" Style="{StaticResource WygladMarginesu}" Cursor="ScrollNS" Width="{Binding DlugoscMarginesuPoziomego}" Height="2" Canvas.Left="{Binding PoczatekMarginesu}" Canvas.Top="{Binding DomyslnaPozycjaMarginesuD, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 <Label Name="MarginesL" Style="{StaticResource WygladMarginesu}" Cursor="ScrollWE" Width="2" Height="{Binding DlugoscMarginesuPionowego}" Canvas.Top="{Binding PoczatekMarginesu}" Canvas.Left="{Binding DomyslnaPozycjaMarginesuL, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
@@ -125,12 +126,12 @@
             </helpers:EtykietaCanvas>
             
         </ScrollViewer>
-        <Canvas>
+        <!--<Canvas>
             <Canvas.LayoutTransform>
                 <ScaleTransform x:Name="EtykietaCanvasZmianaSkali2"/>
             </Canvas.LayoutTransform>
             <ContentPresenter Content="{Binding}"/>
-        </Canvas>
+        </Canvas>-->
         <GroupBox Grid.Row="3" Grid.Column="1" Header="Powiększenie">
             <StackPanel Orientation="Horizontal">
                 <Slider x:Name="SliderPowiekszenie" Width="200" Value="1" Minimum="0.2" Maximum="3" TickFrequency="0.1" TickPlacement="BottomRight" ValueChanged="SliderPowiekszenie_ValueChanged" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2"/>

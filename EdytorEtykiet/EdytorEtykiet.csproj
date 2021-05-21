@@ -38,6 +38,9 @@
     <Reference Include="BarcodeStandard">
       <HintPath>..\BarcodeStandard.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleLabelLibrary">
+      <HintPath>..\..\SimpleLabelLibrary\SimpleLabelLibrary\bin\Debug\netcoreapp3.1\SimpleLabelLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />

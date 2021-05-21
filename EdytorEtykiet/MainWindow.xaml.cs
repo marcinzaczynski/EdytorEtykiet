@@ -1,4 +1,5 @@
-﻿using EdytorEtykiet.Helpers;
+﻿using SimpleLabelLibrary;
+using EdytorEtykiet.Helpers;
 using EdytorEtykiet.Interfaces;
 using EdytorEtykiet.Model;
 using EdytorEtykiet.ViewModel;
@@ -30,6 +31,7 @@ namespace EdytorEtykiet
         double SliderWartoscPowiekszenia = 0.2;
         public static List<INowyElement> ListaElementow2 = new List<INowyElement>();
         private NowaEtykietaModel NowaEtykieta = new NowaEtykietaModel();
+        private SimpleLabel simpleLabel = new SimpleLabel();
 
         #region MAIN
 
@@ -106,15 +108,28 @@ namespace EdytorEtykiet
 
             if (wne.WindowResult)
             {
-                MainVM.WysPx = wne.NowaEtykietaVM.WysPx;
-                MainVM.SzerPx = wne.NowaEtykietaVM.SzerPx;
-                MainVM.NazwaEtykiety = wne.NowaEtykietaVM.NazwaEtykiety;
+
+                var el = EtykietaCanvas.Children.Cast<FrameworkElement>().Where(c => !c.Name.Contains("Margines")).ToList();
+                
+                foreach (FrameworkElement item in el)
+                {
+                    if (!item.Name.Contains("Margines"))
+                    {
+                        EtykietaCanvas.Children.Remove(item);
+                    }
+                }
+
+                ListaElementow2.Clear();
                 MainVM.UtworzDrzewoElementow();
 
 
-                EtykietaCanvas.Children.Clear();               
-                ListaElementow2.Clear();
-                
+                MainVM.WysPx = wne.NowaEtykietaVM.WysPx;
+                MainVM.SzerPx = wne.NowaEtykietaVM.SzerPx;
+                MainVM.NazwaEtykiety = wne.NowaEtykietaVM.NazwaEtykiety;
+                MainVM.NazwaZaznaczonegoElementu = String.Empty;
+
+
+
                 NowaEtykieta.Wysokosc = Convert.ToInt32(wne.NowaEtykietaVM.WysPx); 
                 NowaEtykieta.Szerokosc = Convert.ToInt32(wne.NowaEtykietaVM.SzerPx);
                 NowaEtykieta.Nazwa = wne.NowaEtykietaVM.NazwaEtykiety;
