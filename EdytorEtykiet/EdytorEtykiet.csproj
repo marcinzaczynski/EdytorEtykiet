@@ -69,19 +69,9 @@
     </ApplicationDefinition>
     <Compile Include="Helpers\AppHandler.cs" />
     <Compile Include="Helpers\BarcodeHandler.cs" />
-    <Compile Include="Helpers\Enums.cs" />
     <Compile Include="Helpers\EtykietaCanvas.cs" />
     <Compile Include="Helpers\Globals.cs" />
     <Compile Include="Helpers\PrinterHandler.cs" />
-    <Compile Include="Interfaces\INowaEtykieta.cs" />
-    <Compile Include="Interfaces\INowyElement.cs" />
-    <Compile Include="Interfaces\INowyKodKr.cs" />
-    <Compile Include="Interfaces\INowyObraz.cs" />
-    <Compile Include="Interfaces\INowyTekst.cs" />
-    <Compile Include="Model\NowaEtykietaModel.cs" />
-    <Compile Include="Model\NowyKodKrModel.cs" />
-    <Compile Include="Model\NowyObrazModel.cs" />
-    <Compile Include="Model\NowyTekstModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NowaEtykietaViewModel.cs" />
     <Compile Include="ViewModel\NowyKodKrViewModel.cs" />

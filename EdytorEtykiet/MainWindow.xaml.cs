@@ -1,7 +1,8 @@
 ﻿using SimpleLabelLibrary;
+using SimpleLabelLibrary.Interfaces;
+using SimpleLabelLibrary.Helpers;
+using SimpleLabelLibrary.Models;
 using EdytorEtykiet.Helpers;
-using EdytorEtykiet.Interfaces;
-using EdytorEtykiet.Model;
 using EdytorEtykiet.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,9 @@ using System.Xml.Linq;
 namespace EdytorEtykiet
 {
 
-    public delegate void DodajNowyElementDelegat(INowyElement newElement, double left, double top, bool edit = false);
-    public delegate void EdytujElementDelegat(INowyElement edytowanyElement);
+    public delegate void DodajNowyElementDelegat(IDefaultField newElement, double left, double top, bool edit = false);
+    public delegate void EdytujElementDelegat(IDefaultField edytowanyElement);
+    public delegate bool FieldExistsDelegate(FieldTypes _fieldType, string _fieldName);
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -29,8 +31,6 @@ namespace EdytorEtykiet
 
         object przesuwanyElement;
         double SliderWartoscPowiekszenia = 0.2;
-        public static List<INowyElement> ListaElementow2 = new List<INowyElement>();
-        private NowaEtykietaModel NowaEtykieta = new NowaEtykietaModel();
         private SimpleLabel simpleLabel = new SimpleLabel();
 
         #region MAIN
@@ -40,19 +40,23 @@ namespace EdytorEtykiet
             InitializeComponent();
             WindowNowyTekst.NowyTekstEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
             WindowNowyTekst.EdytujEvent += new EdytujElementDelegat(EdytujElement);
+            WindowNowyTekst.FieldExistsEvent += new FieldExistsDelegate(FieldExists);
 
             WindowNowyKodKr.NowyKodKrEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
             WindowNowyKodKr.EdytujEvent += new EdytujElementDelegat(EdytujElement);
+            WindowNowyKodKr.FieldExistsEvent += new FieldExistsDelegate(FieldExists);
 
             WindowNowyObraz.NowyObrazEvent += new DodajNowyElementDelegat(DodajElementDoEtykiety);
             WindowNowyObraz.EdytujEvent += new EdytujElementDelegat(EdytujElement);
+            WindowNowyObraz.FieldExistsEvent += new FieldExistsDelegate(FieldExists);
 
             PreviewMouseMove += this.MouseMove;
             PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
-            ListaElementow2.Add(NowaEtykieta);
-            MainVM.SzerPx = NowaEtykieta.Szerokosc;
-            MainVM.WysPx = NowaEtykieta.Wysokosc;
-            MainVM.NazwaEtykiety = NowaEtykieta.Nazwa;
+
+
+            MainVM.SzerPx = simpleLabel.FieldsList.Cast<ICanvasField>().Where(fl => fl.FieldType == FieldTypes.Canvas).FirstOrDefault().Width;
+            MainVM.WysPx = simpleLabel.FieldsList.Cast<ICanvasField>().Where(fl => fl.FieldType == FieldTypes.Canvas).FirstOrDefault().Height;
+            MainVM.NazwaEtykiety = simpleLabel.FieldsList.Cast<ICanvasField>().Where(fl => fl.FieldType == FieldTypes.Canvas).FirstOrDefault().Name;
         }
         #endregion
 
@@ -92,7 +96,7 @@ namespace EdytorEtykiet
                 SliderPowiekszenie.Value = 1;
 
                 //Globals.ZapiszPlik(EtykietaCanvas);
-                Globals.ZapiszPlik(ListaElementow2);
+                Globals.ZapiszPlik(simpleLabel.FieldsList);
             }
             catch (Exception ex)
             {
@@ -119,7 +123,7 @@ namespace EdytorEtykiet
                     }
                 }
 
-                ListaElementow2.Clear();
+                simpleLabel.FieldsList.Clear();
                 MainVM.UtworzDrzewoElementow();
 
 
@@ -129,26 +133,26 @@ namespace EdytorEtykiet
                 MainVM.NazwaZaznaczonegoElementu = String.Empty;
 
 
+                simpleLabel.SetupCanvasField(wne.NowaEtykietaVM.NazwaEtykiety, Convert.ToInt32(wne.NowaEtykietaVM.SzerPx), Convert.ToInt32(wne.NowaEtykietaVM.WysPx));
+                //NowaEtykieta.Wysokosc = Convert.ToInt32(wne.NowaEtykietaVM.WysPx); 
+                //NowaEtykieta.Szerokosc = Convert.ToInt32(wne.NowaEtykietaVM.SzerPx);
+                //NowaEtykieta.Nazwa = wne.NowaEtykietaVM.NazwaEtykiety;
 
-                NowaEtykieta.Wysokosc = Convert.ToInt32(wne.NowaEtykietaVM.WysPx); 
-                NowaEtykieta.Szerokosc = Convert.ToInt32(wne.NowaEtykietaVM.SzerPx);
-                NowaEtykieta.Nazwa = wne.NowaEtykietaVM.NazwaEtykiety;
+                EtykietaCanvas.Width = Convert.ToInt32(wne.NowaEtykietaVM.SzerPx);
+                EtykietaCanvas.Height = Convert.ToInt32(wne.NowaEtykietaVM.SzerPx);
 
-                EtykietaCanvas.Width = NowaEtykieta.Szerokosc;
-                EtykietaCanvas.Height = NowaEtykieta.Wysokosc;
-
-                ListaElementow2.Add(NowaEtykieta);
+                //simpleLabel.FieldsList.Add(NowaEtykieta);
             }
         }
 
         private void Command_NowyTekst(object sender, ExecutedRoutedEventArgs e)
         {
             // potrzebuję listę elementów NowyTekst, żeby w nich wyszukać max IdPola
-            var listaNowyTekst = ListaElementow2.Where(r => r is NowyTekstModel).ToList();
+            var listaNowyTekst = simpleLabel.FieldsList.Where(r => r is TextField).ToList();
             var _IdPola = 1;
             if (listaNowyTekst.Count > 0)
             {
-                var _maxIdPola = listaNowyTekst.Cast<NowyTekstModel>().Max(r => r.IdPola);
+                var _maxIdPola = listaNowyTekst.Cast<TextField>().Max(r => r.Id);
                 _IdPola += _maxIdPola;
             }
             else
@@ -163,11 +167,11 @@ namespace EdytorEtykiet
 
         private void Command_NowyKodKr(object sender, ExecutedRoutedEventArgs e)
         {
-            var listaNowyKodKr = ListaElementow2.Where(r => r is NowyKodKrModel).ToList();
+            var listaNowyKodKr = simpleLabel.FieldsList.Where(r => r is BarcodeField).ToList();
             var _IdPola = 1;
             if (listaNowyKodKr.Count > 0)
             {
-                var _maxIdPola = listaNowyKodKr.Cast<NowyKodKrModel>().Max(r => r.IdPola);
+                var _maxIdPola = listaNowyKodKr.Cast<BarcodeField>().Max(r => r.Id);
                 _IdPola += _maxIdPola;
             }
             else
@@ -182,11 +186,11 @@ namespace EdytorEtykiet
 
         private void Command_NowyObraz(object sender, ExecutedRoutedEventArgs e)
         {
-            var listaNowyObraz = ListaElementow2.Where(r => r is NowyObrazModel).ToList();
+            var listaNowyObraz = simpleLabel.FieldsList.Where(r => r is PictureField).ToList();
             var _IdPola = 1;
             if (listaNowyObraz.Count > 0)
             {
-                var _maxIdPola = listaNowyObraz.Cast<NowyObrazModel>().Max(r => r.IdPola);
+                var _maxIdPola = listaNowyObraz.Cast<PictureField>().Max(r => r.Id);
                 _IdPola += _maxIdPola;
             }
             else
@@ -207,19 +211,19 @@ namespace EdytorEtykiet
         private void Command_EdytujElement(object sender, ExecutedRoutedEventArgs e)
         {
             var zaznaczonyElement = ZnajdzElementPoNazwie(MainVM.NazwaZaznaczonegoElementu);
-            var elementDoEdycji = ListaElementow2.Where(r => r.Nazwa == zaznaczonyElement.Name).FirstOrDefault();
-            switch (elementDoEdycji.TypPola)
+            var elementDoEdycji = simpleLabel.FieldsList.Where(r => r.Name == zaznaczonyElement.Name).FirstOrDefault();
+            switch (elementDoEdycji.FieldType)
             {
-                case TypyPol.Barcode:
-                    var elBarcode = (elementDoEdycji as NowyKodKrModel);
+                case FieldTypes.Barcode:
+                    var elBarcode = (elementDoEdycji as BarcodeField);
                     new WindowNowyKodKr(elBarcode).ShowDialog();
                     break;
-                case TypyPol.Txt:
-                    var elTxt = (elementDoEdycji as NowyTekstModel);
+                case FieldTypes.Text:
+                    var elTxt = (elementDoEdycji as TextField);
                     new WindowNowyTekst(elTxt).ShowDialog();
                     break;
-                case TypyPol.Pic:
-                    var elPic = (elementDoEdycji as NowyObrazModel);
+                case FieldTypes.Picture:
+                    var elPic = (elementDoEdycji as PictureField);
                     new WindowNowyObraz(elPic).ShowDialog();
                     break;
                 default:
@@ -242,21 +246,21 @@ namespace EdytorEtykiet
             {
                 var zaznaczonyElement = ZnajdzElementPoNazwie(MainVM.NazwaZaznaczonegoElementu);
 
-                var found = ListaElementow2.Find(r => r.Nazwa == zaznaczonyElement.Name);
-                if (found != null) ListaElementow2.Remove(found);
+                var found = simpleLabel.FieldsList.Find(r => r.Name == zaznaczonyElement.Name);
+                if (found != null) simpleLabel.FieldsList.Remove(found);
 
                 EtykietaCanvas.Children.Remove(zaznaczonyElement);
 
-                switch ((zaznaczonyElement as INowyElement).TypPola)
+                switch ((zaznaczonyElement as IDefaultField).FieldType)
                 {
-                    case TypyPol.Barcode:
-                        MainVM.DrzewoElementow[2].Subelementy.Remove(MainVM.DrzewoElementow[2].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
+                    case FieldTypes.Barcode:
+                        MainVM.DrzewoElementow[2].Subelementy.Remove(MainVM.DrzewoElementow[2].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as IDefaultField).Name).FirstOrDefault());
                         break;
-                    case TypyPol.Txt:
-                        MainVM.DrzewoElementow[0].Subelementy.Remove(MainVM.DrzewoElementow[0].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
+                    case FieldTypes.Text:
+                        MainVM.DrzewoElementow[0].Subelementy.Remove(MainVM.DrzewoElementow[0].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as IDefaultField).Name).FirstOrDefault());
                         break;
-                    case TypyPol.Pic:
-                        MainVM.DrzewoElementow[1].Subelementy.Remove(MainVM.DrzewoElementow[1].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as INowyElement).Nazwa).FirstOrDefault());
+                    case FieldTypes.Picture:
+                        MainVM.DrzewoElementow[1].Subelementy.Remove(MainVM.DrzewoElementow[1].Subelementy.Where(r => r.NazwaElementu == (zaznaczonyElement as IDefaultField).Name).FirstOrDefault());
                         break;
                     default:
                         break;
@@ -334,33 +338,37 @@ namespace EdytorEtykiet
 
         #region DODAJ / POPRAW ELEMENT
 
-        private void DodajElementDoEtykiety(INowyElement _nowe_pole, double left = 5, double top = 5, bool edycja = false)
+        private bool FieldExists(FieldTypes _fieldType, string _fieldName)
+        {
+            var a = simpleLabel.FieldsList.Where(c => c.Name == _fieldName).FirstOrDefault();
+            return (a == null) ? false : true;
+        }
+
+        private void DodajElementDoEtykiety(IDefaultField _nowe_pole, double left = 5, double top = 5, bool edycja = false)
         {
             FrameworkElement nowyElement;
-            switch (_nowe_pole.TypPola)
+            switch (_nowe_pole.FieldType)
             {
-                case TypyPol.Canvas:
+                case FieldTypes.Canvas:
                     break;
-                case TypyPol.Txt:
-                    if (!edycja) MainVM.DrzewoElementow[1].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                case FieldTypes.Text:
+                    if (!edycja) MainVM.DrzewoElementow[1].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Name });
                     nowyElement = new Label();
-                    (nowyElement as Label).Name = (_nowe_pole as NowyTekstModel).Nazwa;
-                    (nowyElement as Label).Content = (_nowe_pole as NowyTekstModel).Tekst;
-                    (nowyElement as Label).BorderThickness = (_nowe_pole as NowyTekstModel).GruboscRamki;
-                    (nowyElement as Label).BorderBrush = (_nowe_pole as NowyTekstModel).KolorRamki;
-                    (nowyElement as Label).FontFamily = (_nowe_pole as NowyTekstModel).FontFamily;
-                    (nowyElement as Label).FontSize = (_nowe_pole as NowyTekstModel).FontSize;
-                    (nowyElement as Label).FontWeight = (_nowe_pole as NowyTekstModel).FontWeight;
-                    (nowyElement as Label).FontStyle = (_nowe_pole as NowyTekstModel).FontStyle;
-                    (nowyElement as Label).Height = (_nowe_pole as NowyTekstModel).Wysokosc;
-                    (nowyElement as Label).Width = (_nowe_pole as NowyTekstModel).Szerokosc;
-                    (nowyElement as Label).HorizontalContentAlignment = (_nowe_pole as NowyTekstModel).WyrownanieWPoziomie;
-                    (nowyElement as Label).VerticalContentAlignment = (_nowe_pole as NowyTekstModel).WyrownanieWPionie;
+                    (nowyElement as Label).Name = (_nowe_pole as TextField).Name;
+                    (nowyElement as Label).Content = (_nowe_pole as TextField).Text;
+                    (nowyElement as Label).BorderThickness = (_nowe_pole as TextField).BorderWidth;
+                    (nowyElement as Label).BorderBrush = (_nowe_pole as TextField).BorderColor;
+                    (nowyElement as Label).FontFamily = (_nowe_pole as TextField).FontFamily;
+                    (nowyElement as Label).FontSize = (_nowe_pole as TextField).FontSize;
+                    (nowyElement as Label).FontWeight = (_nowe_pole as TextField).FontWeight;
+                    (nowyElement as Label).FontStyle = (_nowe_pole as TextField).FontStyle;
+                    (nowyElement as Label).Height = (_nowe_pole as TextField).Height;
+                    (nowyElement as Label).Width = (_nowe_pole as TextField).Width;
+                    (nowyElement as Label).HorizontalContentAlignment = (_nowe_pole as TextField).HorizontalAlignement;
+                    (nowyElement as Label).VerticalContentAlignment = (_nowe_pole as TextField).VerticalAlignement;
                     (nowyElement as Label).Padding = new Thickness(0);
-                    (nowyElement as Label).Background = new SolidColorBrush(Colors.White);
-                    (nowyElement as Label).Foreground = new SolidColorBrush(Colors.Black);
 
-                    ListaElementow2.Add(_nowe_pole);
+                    simpleLabel.FieldsList.Add(_nowe_pole);
                     EtykietaCanvas.Children.Add(nowyElement);
                     Canvas.SetLeft(nowyElement, left);
                     Canvas.SetTop(nowyElement, top);
@@ -369,17 +377,17 @@ namespace EdytorEtykiet
                     nowyElement.PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
                     nowyElement.Cursor = Cursors.SizeAll;
                     break;
-                case TypyPol.TxtDb:
+                case FieldTypes.TextDb:
                     break;
-                case TypyPol.Pic:
-                    if (!edycja) MainVM.DrzewoElementow[3].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                case FieldTypes.Picture:
+                    if (!edycja) MainVM.DrzewoElementow[3].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Name });
                     nowyElement = new Image();
-                    (nowyElement as Image).Name = (_nowe_pole as NowyObrazModel).Nazwa;
-                    (nowyElement as Image).Source = new ImageSourceConverter().ConvertFromString((_nowe_pole as NowyObrazModel).PelnaSciezka) as ImageSource;
-                    RotateTransform rotateTransform = new RotateTransform((_nowe_pole as NowyObrazModel).KatObrotu);
+                    (nowyElement as Image).Name = (_nowe_pole as PictureField).Name;
+                    (nowyElement as Image).Source = new ImageSourceConverter().ConvertFromString((_nowe_pole as PictureField).Path) as ImageSource;
+                    RotateTransform rotateTransform = new RotateTransform((_nowe_pole as PictureField).RotationAngle);
                     (nowyElement as Image).LayoutTransform = rotateTransform;
 
-                    ListaElementow2.Add(_nowe_pole);
+                    simpleLabel.FieldsList.Add(_nowe_pole);
                     EtykietaCanvas.Children.Add(nowyElement);
                     Canvas.SetLeft(nowyElement, left);
                     Canvas.SetTop(nowyElement, top);
@@ -388,20 +396,20 @@ namespace EdytorEtykiet
                     nowyElement.PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
                     nowyElement.Cursor = Cursors.SizeAll;
                     break;
-                case TypyPol.PicDb:
+                case FieldTypes.PictureDb:
                     break;
-                case TypyPol.Barcode:
-                    if (!edycja) MainVM.DrzewoElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Nazwa });
+                case FieldTypes.Barcode:
+                    if (!edycja) MainVM.DrzewoElementow[5].Subelementy.Add(new ElementEtykiety { NazwaElementu = _nowe_pole.Name });
                     nowyElement = new Image();
-                    (nowyElement as Image).Name = (_nowe_pole as NowyKodKrModel).Nazwa;
+                    (nowyElement as Image).Name = (_nowe_pole as BarcodeField).Name;
 
-                    (nowyElement as Image).Source = BarcodeHandler.UtworzKod((_nowe_pole as NowyKodKrModel).Typ
-                        , (_nowe_pole as NowyKodKrModel).Tekst
-                        , (_nowe_pole as NowyKodKrModel).Szerokosc
-                        , (_nowe_pole as NowyKodKrModel).Wysokosc
-                        , (_nowe_pole as NowyKodKrModel).CzyPokazacTekst);
+                    (nowyElement as Image).Source = BarcodeHandler.UtworzKod((_nowe_pole as BarcodeField).BarcodeType
+                        , (_nowe_pole as BarcodeField).TextToEncode
+                        , (_nowe_pole as BarcodeField).Width
+                        , (_nowe_pole as BarcodeField).Height
+                        , (_nowe_pole as BarcodeField).ShowTextToEncode);
 
-                    ListaElementow2.Add(_nowe_pole);
+                    simpleLabel.FieldsList.Add(_nowe_pole);
                     EtykietaCanvas.Children.Add(nowyElement);
                     Canvas.SetLeft(nowyElement, left);
                     Canvas.SetTop(nowyElement, top);
@@ -410,7 +418,7 @@ namespace EdytorEtykiet
                     nowyElement.PreviewMouseLeftButtonUp += this.OnPreviewMouseLeftButtonUp;
                     nowyElement.Cursor = Cursors.SizeAll;
                     break;
-                case TypyPol.BarcodeDb:
+                case FieldTypes.BarcodeDb:
                     break;
                 default:
                     break;
@@ -418,9 +426,9 @@ namespace EdytorEtykiet
         }
 
        
-        private void EdytujElement(INowyElement _edytowanyElement)
+        private void EdytujElement(IDefaultField _edytowanyElement)
         {
-            var edytowanyElement = ZnajdzElementPoNazwie(_edytowanyElement.Nazwa);
+            var edytowanyElement = ZnajdzElementPoNazwie(_edytowanyElement.Name);
 
             if (edytowanyElement != null)
             {
@@ -429,8 +437,8 @@ namespace EdytorEtykiet
 
                 //ListaElementow.Remove(edytowanyElement);
 
-                var found = ListaElementow2.Find(r => r.Nazwa == edytowanyElement.Name);
-                if (found != null) ListaElementow2.Remove(found);
+                var found = simpleLabel.FieldsList.Find(r => r.Name == edytowanyElement.Name);
+                if (found != null) simpleLabel.FieldsList.Remove(found);
 
                 EtykietaCanvas.Children.Remove(edytowanyElement);
 
@@ -468,14 +476,14 @@ namespace EdytorEtykiet
             {
                 if (przesuwanyElement is FrameworkElement fe)
                 {
-                    var modelElementu = ListaElementow2.Where(l => l.Nazwa == fe.Name).FirstOrDefault();
-                    var typElementu = modelElementu.TypPola;
+                    var modelElementu = simpleLabel.FieldsList.Where(l => l.Name == fe.Name).FirstOrDefault();
+                    var typElementu = modelElementu.FieldType;
                     // jest problem z obróconym obrazem, bo on po obrocie nie zmienia rozmiarów tylko wygląd. 
                     // obejściem tego jest podmiana wysokości z szerokością dla obiektów klasy NowyObrazModel z NowyObrazModel.KatObrotu = 90 i 270
                     var feWys = fe.ActualHeight;
                     var feSzer = fe.ActualWidth;
 
-                    if ((typElementu == TypyPol.Pic) && (((modelElementu as NowyObrazModel).KatObrotu == 90) || ((modelElementu as NowyObrazModel).KatObrotu == 270)))
+                    if ((typElementu == FieldTypes.Picture) && (((modelElementu as PictureField).RotationAngle == 90) || ((modelElementu as PictureField).RotationAngle == 270)))
                     {
                         feWys = fe.ActualWidth;
                         feSzer = fe.ActualHeight;

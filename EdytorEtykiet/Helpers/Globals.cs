@@ -1,5 +1,6 @@
-﻿using EdytorEtykiet.Interfaces;
-using EdytorEtykiet.Model;
+﻿using SimpleLabelLibrary.Interfaces;
+using SimpleLabelLibrary.Models;
+using SimpleLabelLibrary.Helpers;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace EdytorEtykiet.Helpers
             return null;
         }
 
-        public static bool ZapiszPlik(List<INowyElement> _etykieta)
+        public static bool ZapiszPlik(List<IDefaultField> _etykieta)
         {
 
             //XDocument d = new XDocument(
@@ -92,49 +93,55 @@ namespace EdytorEtykiet.Helpers
 
 
             XElement element =
-            new XElement("WzorEtykiety",
+            new XElement("LabelTemplate",
                 (from item in _etykieta
-                 where item.TypPola == TypyPol.Txt
-                 select new XElement(item.TypPola.ToString(),
-                     new XElement("IdPola", (item as NowyTekstModel).IdPola),
-                     new XElement("Nazwa", (item as NowyTekstModel).Nazwa),
-                     new XElement("Tekst", (item as NowyTekstModel).Tekst),
-                     new XElement("CzyJestRamka", (item as NowyTekstModel).CzyJestRamka),
-                     new XElement("KolorRamki", (item as NowyTekstModel).KolorRamki),
-                     new XElement("GruboscRamki", (item as NowyTekstModel).GruboscRamki),
-                     new XElement("FontFamily", (item as NowyTekstModel).FontFamily),
-                     new XElement("FontSize", (item as NowyTekstModel).FontSize),
-                     new XElement("FontWeight", (item as NowyTekstModel).FontWeight),
-                     new XElement("FontStyle", (item as NowyTekstModel).FontStyle),
-                     new XElement("Wysokosc", (item as NowyTekstModel).Wysokosc),
-                     new XElement("Szerokosc", (item as NowyTekstModel).Szerokosc),
-                     new XElement("AutoDopasowanie", (item as NowyTekstModel).AutoDopasowanie),
-                     new XElement("WyrownanieWPoziomie", (item as NowyTekstModel).WyrownanieWPoziomie),
-                     new XElement("WyrownanieWPionie", (item as NowyTekstModel).WyrownanieWPionie)
+                 where item.FieldType == FieldTypes.Text
+                 select new XElement(item.FieldType.ToString(),
+                     new XElement("Id", (item as TextField).Id),
+                     new XElement("Name", (item as TextField).Name),
+                     new XElement("Left", (item as TextField).Left),
+                     new XElement("Top", (item as TextField).Top),
+                     new XElement("Text", (item as TextField).Text),
+                     new XElement("ShowBorder", (item as TextField).ShowBorder),
+                     new XElement("BorderColor", (item as TextField).BorderColor),
+                     new XElement("BorderWidth", (item as TextField).BorderWidth),
+                     new XElement("FontFamily", (item as TextField).FontFamily),
+                     new XElement("FontSize", (item as TextField).FontSize),
+                     new XElement("FontWeight", (item as TextField).FontWeight),
+                     new XElement("FontStyle", (item as TextField).FontStyle),
+                     new XElement("Height", (item as TextField).Height),
+                     new XElement("Width", (item as TextField).Width),
+                     new XElement("AutoFit", (item as TextField).AutoFit),
+                     new XElement("HorizontalAlignement", (item as TextField).HorizontalAlignement),
+                     new XElement("VerticalAlignement", (item as TextField).VerticalAlignement)
                      )
                 ),
                 (from item in _etykieta
-                 where item.TypPola == TypyPol.Pic
-                 select new XElement(item.TypPola.ToString(),
-                     new XElement("IdPola", (item as NowyObrazModel).IdPola),
-                     new XElement("Nazwa", (item as NowyObrazModel).Nazwa),
-                     new XElement("PelnaSciezka", (item as NowyObrazModel).PelnaSciezka),
-                     new XElement("KatObrotu", (item as NowyObrazModel).KatObrotu)
+                 where item.FieldType == FieldTypes.Picture
+                 select new XElement(item.FieldType.ToString(),
+                     new XElement("Id", (item as PictureField).Id),
+                     new XElement("Name", (item as PictureField).Name),
+                     new XElement("Left", (item as PictureField).Left),
+                     new XElement("Top", (item as PictureField).Top),
+                     new XElement("Path", (item as PictureField).Path),
+                     new XElement("RotationAngle", (item as PictureField).RotationAngle)
                      )
                 ),
                 (from item in _etykieta
-                 where item.TypPola == TypyPol.Barcode
-                 select new XElement(item.TypPola.ToString(),
-                     new XElement("IdPola", (item as NowyKodKrModel).IdPola),
-                     new XElement("Nazwa", (item as NowyKodKrModel).Nazwa),
-                     new XElement("Tekst", (item as NowyKodKrModel).Tekst),
-                     new XElement("Typ", (item as NowyKodKrModel).Typ),
-                     new XElement("CzyPokazacTekst", (item as NowyKodKrModel).CzyPokazacTekst),
-                     new XElement("Szerokosc", (item as NowyKodKrModel).Szerokosc),
-                     new XElement("Wysokosc", (item as NowyKodKrModel).Wysokosc),
-                     new XElement("FontFamily", (item as NowyKodKrModel).FontFamily),
-                     new XElement("FontSize", (item as NowyKodKrModel).FontSize),
-                     new XElement("FontWeight", (item as NowyKodKrModel).FontWeight)
+                 where item.FieldType == FieldTypes.Barcode
+                 select new XElement(item.FieldType.ToString(),
+                     new XElement("Id", (item as BarcodeField).Id),
+                     new XElement("Name", (item as BarcodeField).Name),
+                     new XElement("Left", (item as BarcodeField).Left),
+                     new XElement("Top", (item as BarcodeField).Top),
+                     new XElement("TextToEncode", (item as BarcodeField).TextToEncode),
+                     new XElement("BarcodeType", (item as BarcodeField).BarcodeType),
+                     new XElement("ShowTextToEncode", (item as BarcodeField).ShowTextToEncode),
+                     new XElement("Width", (item as BarcodeField).Width),
+                     new XElement("Height", (item as BarcodeField).Height),
+                     new XElement("FontFamily", (item as BarcodeField).FontFamily),
+                     new XElement("FontSize", (item as BarcodeField).FontSize),
+                     new XElement("FontWeight", (item as BarcodeField).FontWeight)
                      )
                 )
             );

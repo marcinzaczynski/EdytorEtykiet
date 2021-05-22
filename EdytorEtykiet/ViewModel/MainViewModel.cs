@@ -1,4 +1,4 @@
-﻿using EdytorEtykiet.Helpers;
+﻿using SimpleLabelLibrary.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -103,13 +103,13 @@ namespace EdytorEtykiet.ViewModel
         {
             DrzewoElementow = null;
             DrzewoElementow = new ObservableCollection<ElementEtykiety>();
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Etykieta", TypPola = TypyPol.Canvas });
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst", TypPola = TypyPol.Txt });
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst z bazy danych", TypPola = TypyPol.TxtDb });
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz", TypPola = TypyPol.Pic });
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz z bazy danych", TypPola = TypyPol.PicDb });
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy", TypPola = TypyPol.Barcode });
-            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy z bazy danych", TypPola = TypyPol.BarcodeDb });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Etykieta", TypPola = FieldTypes.Canvas });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst", TypPola = FieldTypes.Text });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Tekst z bazy danych", TypPola = FieldTypes.TextDb });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz", TypPola = FieldTypes.Picture });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Obraz z bazy danych", TypPola = FieldTypes.PictureDb });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy", TypPola = FieldTypes.Barcode });
+            DrzewoElementow.Add(new ElementEtykiety { NazwaElementu = "Kod kreskowy z bazy danych", TypPola = FieldTypes.BarcodeDb });
 
 
             DrzewoElementow[0].Subelementy = new ObservableCollection<ElementEtykiety>();
@@ -139,7 +139,7 @@ namespace EdytorEtykiet.ViewModel
         #region region PROPERTIES
         public string NazwaElementu { get; set; }
         public ObservableCollection<ElementEtykiety> Subelementy { get; set; }
-        public TypyPol TypPola { get; set; }
+        public FieldTypes TypPola { get; set; }
         private bool jestWybrany;
 
         public bool JestWybrany { get { return jestWybrany; } set { jestWybrany = value; OnPropertyChanged("JestWybrany"); } }

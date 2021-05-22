@@ -1,7 +1,8 @@
-﻿using EdytorEtykiet.Helpers;
-using EdytorEtykiet.Model;
+﻿using SimpleLabelLibrary.Helpers;
+using EdytorEtykiet.Helpers;
 using EdytorEtykiet.ViewModel;
 using System.Linq;
+using SimpleLabelLibrary.Models;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -16,23 +17,24 @@ namespace EdytorEtykiet
     {
         public static event DodajNowyElementDelegat NowyKodKrEvent;
         public static event EdytujElementDelegat EdytujEvent;
+        public static event FieldExistsDelegate FieldExistsEvent;
 
         FontDialog fontDialog = new FontDialog();
 
-        public NowyKodKrModel NowyKodKr = new NowyKodKrModel();
-        public WindowNowyKodKr(NowyKodKrModel nowy_kodkr = null, int id_pola = 0)
+        public BarcodeField NowyKodKr = new BarcodeField();
+        public WindowNowyKodKr(BarcodeField nowy_kodkr = null, int id_pola = 0)
         {
             InitializeComponent();
             if (nowy_kodkr != null)
             {
                 NowyKodKrVM.CzyEdycja = true;
-                NowyKodKrVM.IdPola = nowy_kodkr.IdPola;
-                NowyKodKrVM.Nazwa = nowy_kodkr.Nazwa;
-                NowyKodKrVM.Tekst = nowy_kodkr.Tekst;
-                NowyKodKrVM.Typ = nowy_kodkr.Typ;
-                NowyKodKrVM.Szerokosc = nowy_kodkr.Szerokosc;
-                NowyKodKrVM.Wysokosc = nowy_kodkr.Wysokosc;
-                NowyKodKrVM.CzyPokazacTekst = nowy_kodkr.CzyPokazacTekst;
+                NowyKodKrVM.IdPola = nowy_kodkr.Id;
+                NowyKodKrVM.Nazwa = nowy_kodkr.Name;
+                NowyKodKrVM.Tekst = nowy_kodkr.TextToEncode;
+                NowyKodKrVM.Typ = nowy_kodkr.BarcodeType;
+                NowyKodKrVM.Szerokosc = nowy_kodkr.Width;
+                NowyKodKrVM.Wysokosc = nowy_kodkr.Height;
+                NowyKodKrVM.CzyPokazacTekst = nowy_kodkr.ShowTextToEncode;
                 NowyKodKrVM.FontFamily = nowy_kodkr.FontFamily;
                 NowyKodKrVM.FontSize = nowy_kodkr.FontSize;
                 NowyKodKrVM.FontWeight = nowy_kodkr.FontWeight;
@@ -44,8 +46,8 @@ namespace EdytorEtykiet
             {
                 NowyKodKrVM.IdPola = id_pola;
             }
-            NowyKodKr = new NowyKodKrModel();
-            NowyKodKr.IdPola = NowyKodKrVM.IdPola;
+            NowyKodKr = new BarcodeField();
+            NowyKodKr.Id = NowyKodKrVM.IdPola;
 
             NowyKodKrVM.ListaTypow = BarcodeHandler.PobierzListeTypow();
         }
@@ -54,18 +56,19 @@ namespace EdytorEtykiet
 
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NowyKodKr.IdPola = NowyKodKrVM.IdPola;
-            NowyKodKr.Nazwa = NowyKodKrVM.Nazwa;
-            NowyKodKr.Tekst = NowyKodKrVM.Tekst;
-            NowyKodKr.Typ = NowyKodKrVM.Typ;
-            NowyKodKr.CzyPokazacTekst = NowyKodKrVM.CzyPokazacTekst;
-            NowyKodKr.Szerokosc = NowyKodKrVM.Szerokosc;
-            NowyKodKr.Wysokosc = NowyKodKrVM.Wysokosc;
+            NowyKodKr.Id = NowyKodKrVM.IdPola;
+            NowyKodKr.Name = NowyKodKrVM.Nazwa;
+            NowyKodKr.TextToEncode = NowyKodKrVM.Tekst;
+            NowyKodKr.BarcodeType = NowyKodKrVM.Typ;
+            NowyKodKr.ShowTextToEncode= NowyKodKrVM.CzyPokazacTekst;
+            NowyKodKr.Width = NowyKodKrVM.Szerokosc;
+            NowyKodKr.Height = NowyKodKrVM.Wysokosc;
             NowyKodKr.FontFamily = NowyKodKrVM.FontFamily;
             NowyKodKr.FontSize = NowyKodKrVM.FontSize;
             NowyKodKr.FontWeight = NowyKodKrVM.FontWeight;
 
-            var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyKodKrVM.Nazwa).FirstOrDefault();
+            var nameExists = FieldExistsEvent?.Invoke(FieldTypes.Barcode, NowyKodKrVM.Nazwa);
+            //var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyKodKrVM.Nazwa).FirstOrDefault();
 
             if (NowyKodKrVM.CzyEdycja)
             {
@@ -73,7 +76,7 @@ namespace EdytorEtykiet
             }
             else
             {
-                if (nameExist == null)
+                if (nameExists == null)
                 {
                     NowyKodKrEvent?.Invoke(NowyKodKr, 2, 2, false);
                 }

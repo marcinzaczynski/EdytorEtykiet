@@ -1,4 +1,5 @@
-﻿using EdytorEtykiet.Model;
+﻿using SimpleLabelLibrary.Models;
+using SimpleLabelLibrary.Helpers;
 using EdytorEtykiet.ViewModel;
 using System.Linq;
 using System.Windows;
@@ -14,20 +15,21 @@ namespace EdytorEtykiet
     {
         public static event DodajNowyElementDelegat NowyObrazEvent;
         public static event EdytujElementDelegat EdytujEvent;
+        public static event FieldExistsDelegate FieldExistsEvent;
 
-        public NowyObrazModel NowyObraz = new NowyObrazModel();
+        public PictureField NowyObraz = new PictureField();
 
-        public WindowNowyObraz(NowyObrazModel nowy_obraz = null, int id_pola = 0)
+        public WindowNowyObraz(PictureField nowy_obraz = null, int id_pola = 0)
         {
             InitializeComponent();
             if (nowy_obraz != null)
             {
                 NowyObrazVM.CzyEdycja = true;
-                NowyObrazVM.IdPola = nowy_obraz.IdPola;
-                NowyObrazVM.Nazwa = nowy_obraz.Nazwa;
-                NowyObrazVM.PelnaSciezka = nowy_obraz.PelnaSciezka;
-                NowyObrazVM.KatObrotu = nowy_obraz.KatObrotu;
-                NowyObrazVM.Source = new ImageSourceConverter().ConvertFromString(nowy_obraz.PelnaSciezka) as ImageSource;
+                NowyObrazVM.IdPola = nowy_obraz.Id;
+                NowyObrazVM.Nazwa = nowy_obraz.Name;
+                NowyObrazVM.PelnaSciezka = nowy_obraz.Path;
+                NowyObrazVM.KatObrotu = nowy_obraz.RotationAngle;
+                NowyObrazVM.Source = new ImageSourceConverter().ConvertFromString(nowy_obraz.Path) as ImageSource;
                 Obroc(NowyObrazVM.KatObrotu);
             }
             else
@@ -39,13 +41,13 @@ namespace EdytorEtykiet
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
 
-            NowyObraz.IdPola = NowyObrazVM.IdPola;
-            NowyObraz.Nazwa = NowyObrazVM.Nazwa;
-            NowyObraz.PelnaSciezka = NowyObrazVM.PelnaSciezka;
-            NowyObraz.KatObrotu = NowyObrazVM.KatObrotu;
-            
+            NowyObraz.Id = NowyObrazVM.IdPola;
+            NowyObraz.Name = NowyObrazVM.Nazwa;
+            NowyObraz.Path = NowyObrazVM.PelnaSciezka;
+            NowyObraz.RotationAngle = NowyObrazVM.KatObrotu;
 
-            var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyObrazVM.Nazwa).FirstOrDefault();
+
+            var nameExists = FieldExistsEvent?.Invoke(FieldTypes.Picture, NowyObrazVM.Nazwa);
 
             if (NowyObrazVM.CzyEdycja)
             {
@@ -53,7 +55,7 @@ namespace EdytorEtykiet
             }
             else
             {
-                if (nameExist == null)
+                if (nameExists == null)
                 {
                     NowyObrazEvent?.Invoke(NowyObraz, 2, 2, false);
                 }

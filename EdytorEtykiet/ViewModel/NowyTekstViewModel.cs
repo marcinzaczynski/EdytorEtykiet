@@ -97,8 +97,8 @@ namespace EdytorEtykiet.ViewModel
                     1
                     );
 
-                Szerokosc = Math.Round(formattedText.Width, 0);
-                Wysokosc = Math.Round(formattedText.Height, 0);
+                Szerokosc = formattedText.Width;
+                Wysokosc = formattedText.Height;
 
             }
         }

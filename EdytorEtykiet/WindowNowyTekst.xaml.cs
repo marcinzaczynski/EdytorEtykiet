@@ -1,5 +1,6 @@
-﻿using EdytorEtykiet.Helpers;
-using EdytorEtykiet.Model;
+﻿using SimpleLabelLibrary.Models;
+using SimpleLabelLibrary.Helpers;
+using EdytorEtykiet.Helpers;
 using EdytorEtykiet.ViewModel;
 using System.Linq;
 using System.Windows;
@@ -16,33 +17,34 @@ namespace EdytorEtykiet
     {
         public static event DodajNowyElementDelegat NowyTekstEvent;
         public static event EdytujElementDelegat EdytujEvent;
+        public static event FieldExistsDelegate FieldExistsEvent;
 
-        public NowyTekstModel NowyTekst = new NowyTekstModel();
+        public TextField NowyTekst = new TextField();
 
         FontDialog fontDialog = new FontDialog();
 
-        public WindowNowyTekst(NowyTekstModel nowy_tekst = null, int id_pola = 0)
+        public WindowNowyTekst(TextField nowy_tekst = null, int id_pola = 0)
         {
             InitializeComponent();
 
             if (nowy_tekst != null)
             {
                 NowyTekstVM.CzyEdycja = true;
-                NowyTekstVM.IdPola = nowy_tekst.IdPola;
-                NowyTekstVM.Nazwa = nowy_tekst.Nazwa;
-                NowyTekstVM.Tekst = nowy_tekst.Tekst;
-                NowyTekstVM.CzyJestRamka = nowy_tekst.CzyJestRamka;
-                NowyTekstVM.KolorRamki = nowy_tekst.KolorRamki;
-                NowyTekstVM.GruboscRamki = nowy_tekst.GruboscRamki;
+                NowyTekstVM.IdPola = nowy_tekst.Id;
+                NowyTekstVM.Nazwa = nowy_tekst.Name;
+                NowyTekstVM.Tekst = nowy_tekst.Text;
+                NowyTekstVM.CzyJestRamka = nowy_tekst.ShowBorder;
+                NowyTekstVM.KolorRamki = nowy_tekst.BorderColor;
+                NowyTekstVM.GruboscRamki = nowy_tekst.BorderWidth;
                 NowyTekstVM.FontFamily = nowy_tekst.FontFamily;
                 NowyTekstVM.FontSize = nowy_tekst.FontSize;
                 NowyTekstVM.FontWeight = nowy_tekst.FontWeight;
                 NowyTekstVM.FontStyle = nowy_tekst.FontStyle;
-                NowyTekstVM.Wysokosc = nowy_tekst.Wysokosc;
-                NowyTekstVM.Szerokosc = nowy_tekst.Szerokosc;
-                NowyTekstVM.AutoDopasowanie = nowy_tekst.AutoDopasowanie;
-                NowyTekstVM.WyrownanieWPoziomie = nowy_tekst.WyrownanieWPoziomie;
-                NowyTekstVM.WyrownanieWPionie = nowy_tekst.WyrownanieWPionie;
+                NowyTekstVM.Wysokosc = nowy_tekst.Height;
+                NowyTekstVM.Szerokosc = nowy_tekst.Width;
+                NowyTekstVM.AutoDopasowanie = nowy_tekst.AutoFit;
+                NowyTekstVM.WyrownanieWPoziomie = nowy_tekst.HorizontalAlignement;
+                NowyTekstVM.WyrownanieWPionie = nowy_tekst.VerticalAlignement;
             }
             else
             {
@@ -55,23 +57,23 @@ namespace EdytorEtykiet
 
         private void CommandOk_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            NowyTekst.IdPola = NowyTekstVM.IdPola;
-            NowyTekst.Nazwa = NowyTekstVM.Nazwa;
-            NowyTekst.Tekst = NowyTekstVM.Tekst;
-            NowyTekst.CzyJestRamka = NowyTekstVM.CzyJestRamka;
-            NowyTekst.KolorRamki = NowyTekstVM.KolorRamki;
-            NowyTekst.GruboscRamki = NowyTekstVM.GruboscRamki;
+            NowyTekst.Id = NowyTekstVM.IdPola;
+            NowyTekst.Name = NowyTekstVM.Nazwa;
+            NowyTekst.Text = NowyTekstVM.Tekst;
+            NowyTekst.ShowBorder = NowyTekstVM.CzyJestRamka;
+            NowyTekst.BorderColor = NowyTekstVM.KolorRamki;
+            NowyTekst.BorderWidth = NowyTekstVM.GruboscRamki;
             NowyTekst.FontFamily = NowyTekstVM.FontFamily;
             NowyTekst.FontSize = NowyTekstVM.FontSize;
             NowyTekst.FontWeight = NowyTekstVM.FontWeight;
             NowyTekst.FontStyle = NowyTekstVM.FontStyle;
-            NowyTekst.Wysokosc = NowyTekstVM.Wysokosc;
-            NowyTekst.Szerokosc = NowyTekstVM.Szerokosc;
-            NowyTekst.AutoDopasowanie = NowyTekstVM.AutoDopasowanie;
-            NowyTekst.WyrownanieWPoziomie = NowyTekstVM.WyrownanieWPoziomie;
-            NowyTekst.WyrownanieWPionie = NowyTekstVM.WyrownanieWPionie;  
+            NowyTekst.Height = NowyTekstVM.Wysokosc;
+            NowyTekst.Width = NowyTekstVM.Szerokosc;
+            NowyTekst.AutoFit = NowyTekstVM.AutoDopasowanie;
+            NowyTekst.HorizontalAlignement = NowyTekstVM.WyrownanieWPoziomie;
+            NowyTekst.VerticalAlignement = NowyTekstVM.WyrownanieWPionie;
 
-            var nameExist = MainWindow.ListaElementow2.Where(c => c.Nazwa == NowyTekstVM.Nazwa).FirstOrDefault();
+            var nameExists = FieldExistsEvent?.Invoke(FieldTypes.Text, NowyTekstVM.Nazwa);
 
 
 
@@ -81,7 +83,7 @@ namespace EdytorEtykiet
             }
             else
             {
-                if (nameExist == null)
+                if (nameExists == null)
                 {
                     NowyTekstEvent?.Invoke(NowyTekst, 2, 2, false);
                 }
